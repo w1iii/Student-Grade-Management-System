@@ -6,7 +6,8 @@
     "types": ["node", "electron"],
     "strict": true,
     "esModuleInterop": true,
-    "skipLibCheck": true
+    "skipLibCheck": true,
+    "moduleResolution": "node"
   },
   "include": ["*.ts"]
 }

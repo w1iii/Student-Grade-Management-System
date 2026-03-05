@@ -1,5 +1,108 @@
 import { app, BrowserWindow, ipcMain } from 'electron'
 import path from 'path'
+import fs from 'fs-extra'
+
+interface Grade {
+  subject: string
+  quarter1: number
+  quarter2: number
+  quarter3: number
+  quarter4: number
+}
+
+interface StudentGradesData {
+  student_id: number
+  first_name: string
+  last_name: string
+  grades: Grade[]
+}
+
+const CSV_PATH = path.join(__dirname, '..', 'studentData.csv')
+
+async function loadAllStudentsFromCSV(): Promise<StudentGradesData[]> {
+  if (!await fs.pathExists(CSV_PATH)) {
+    return []
+  }
+  const content = await fs.readFile(CSV_PATH, 'utf-8')
+  const lines = content.trim().split('\n')
+  if (lines.length < 2) return []
+
+  const studentsMap: Record<number, StudentGradesData> = {}
+
+  for (let i = 1; i < lines.length; i++) {
+    const line = lines[i].trim()
+    if (!line) continue
+
+    const [studentId, firstName, lastName, subject, q1, q2, q3, q4] = line.split(',')
+    const id = parseInt(studentId)
+
+    if (!studentsMap[id]) {
+      studentsMap[id] = {
+        student_id: id,
+        first_name: firstName,
+        last_name: lastName,
+        grades: []
+      }
+    }
+
+    studentsMap[id].grades.push({
+      subject: subject,
+      quarter1: parseInt(q1) || 0,
+      quarter2: parseInt(q2) || 0,
+      quarter3: parseInt(q3) || 0,
+      quarter4: parseInt(q4) || 0
+    })
+  }
+
+  return Object.values(studentsMap)
+}
+
+async function saveAllStudentsToCSV(students: StudentGradesData[]): Promise<void> {
+  let csvContent = 'student_id,first_name,last_name,subject,quarter1,quarter2,quarter3,quarter4\n'
+
+  for (const student of students) {
+    for (const grade of student.grades) {
+      csvContent += `${student.student_id},${student.first_name},${student.last_name},${grade.subject},${grade.quarter1},${grade.quarter2},${grade.quarter3},${grade.quarter4}\n`
+    }
+  }
+
+  await fs.writeFile(CSV_PATH, csvContent, 'utf-8')
+}
+
+async function updateStudentGrade(
+  studentId: number,
+  subject: string,
+  quarter: 'quarter1' | 'quarter2' | 'quarter3' | 'quarter4',
+  value: number
+): Promise<boolean> {
+  const students = await loadAllStudentsFromCSV()
+  const student = students.find(s => s.student_id === studentId)
+  
+  if (!student) return false
+
+  const grade = student.grades.find(g => g.subject === subject)
+  if (!grade) return false
+
+  grade[quarter] = value
+
+  await saveAllStudentsToCSV(students)
+  return true
+}
+
+async function updateAllStudentGrades(
+  studentId: number,
+  newGrades: Grade[]
+): Promise<boolean> {
+  const students = await loadAllStudentsFromCSV()
+  const student = students.find(s => s.student_id === studentId)
+  
+  if (!student) return false
+
+  student.grades = newGrades
+
+  await saveAllStudentsToCSV(students)
+  return true
+}
 
 function createWindow() {
   const win = new BrowserWindow({
@@ -9,7 +112,6 @@ function createWindow() {
       preload: path.join(__dirname, 'preload.cjs')
     }
   })
-  // Load React dev server
   win.loadURL('http://localhost:5173')
 }
 
@@ -24,67 +126,9 @@ ipcMain.handle('login', async (_, credentials: { username: string; password: str
   }
 })
 
-interface Grade{
-  subject:string
-  quarter1: number
-  quarter2: number
-  quarter3: number
-  quarter4: number
-}
-
-interface StudentGradesData {
-  student_id: number
-  first_name: string
-  last_name: string
-  grades: Grade[]
-}
-
-// Student and grades data
-const allStudentGrades: Record<number, StudentGradesData> = {
-  1: {
-    student_id: 1,
-    first_name: 'John',
-    last_name: 'Smith',
-    grades: [
-      { subject: 'Math', quarter1: 85, quarter2: 88, quarter3: 90, quarter4: 87 },
-      { subject: 'English', quarter1: 78, quarter2: 82, quarter3: 80, quarter4: 81 },
-      { subject: 'Science', quarter1: 92, quarter2: 89, quarter3: 95, quarter4: 92 },
-      { subject: 'History', quarter1: 80, quarter2: 83, quarter3: 85, quarter4: 83 },
-      { subject: 'PE', quarter1: 88, quarter2: 90, quarter3: 89, quarter4: 89 },
-      { subject: 'Art', quarter1: 91, quarter2: 93, quarter3: 92, quarter4: 92 },
-    ]
-  },
-  2: {
-    student_id: 2,
-    first_name: 'Maria',
-    last_name: 'Garcia',
-    grades: [
-      { subject: 'Math', quarter1: 75, quarter2: 78, quarter3: 82, quarter4: 80 },
-      { subject: 'English', quarter1: 88, quarter2: 90, quarter3: 92, quarter4: 91 },
-      { subject: 'Science', quarter1: 80, quarter2: 82, quarter3: 84, quarter4: 83 },
-      { subject: 'History', quarter1: 85, quarter2: 87, quarter3: 89, quarter4: 88 },
-      { subject: 'PE', quarter1: 92, quarter2: 94, quarter3: 93, quarter4: 95 },
-      { subject: 'Art', quarter1: 88, quarter2: 89, quarter3: 87, quarter4: 88 },
-    ]
-  },
-  3: {
-    student_id: 3,
-    first_name: 'Ahmed',
-    last_name: 'Hassan',
-    grades: [
-      { subject: 'Math', quarter1: 92, quarter2: 94, quarter3: 96, quarter4: 95 },
-      { subject: 'English', quarter1: 85, quarter2: 86, quarter3: 87, quarter4: 88 },
-      { subject: 'Science', quarter1: 88, quarter2: 91, quarter3: 93, quarter4: 92 },
-      { subject: 'History', quarter1: 90, quarter2: 92, quarter3: 91, quarter4: 93 },
-      { subject: 'PE', quarter1: 80, quarter2: 82, quarter3: 83, quarter4: 81 },
-      { subject: 'Art', quarter1: 85, quarter2: 84, quarter3: 86, quarter4: 85 },
-    ]
-  }
-}
-
-ipcMain.handle('getStudents', async (_, { gradeId }) => {
-  // Return list of students (without grades)
-  return Object.values(allStudentGrades).map(student => ({
+ipcMain.handle('getStudents', async () => {
+  const students = await loadAllStudentsFromCSV()
+  return students.map(student => ({
     id: student.student_id,
     first_name: student.first_name,
     last_name: student.last_name
@@ -92,8 +136,8 @@ ipcMain.handle('getStudents', async (_, { gradeId }) => {
 })
 
 ipcMain.handle('getStudentGrades', async (_, { studentId }) => {
-  // Return grades for specific student
-  const student = allStudentGrades[studentId]
+  const students = await loadAllStudentsFromCSV()
+  const student = students.find(s => s.student_id === studentId)
   if (student) {
     return student.grades
   }
@@ -103,23 +147,36 @@ ipcMain.handle('getStudentGrades', async (_, { studentId }) => {
 ipcMain.handle(
   'updateAllStudentGrades',
   async (_, { studentId, grades }) => {
-    console.log('SAVE ALL GRADES')
-    console.log('Student ID:', studentId)
-    console.table(grades)
-    return true
+    const success = await updateAllStudentGrades(studentId, grades)
+    return success
   }
 )
 
 ipcMain.handle(
   'updateStudentGrade',
   async (_, { studentId, subjectIndex, quarter, value }) => {
-    console.log('SAVE SINGLE GRADE')
-    console.log({
-      studentId,
-      subjectIndex,
-      quarter,
-      value,
-    })
-    return true
+    const students = await loadAllStudentsFromCSV()
+    const student = students.find(s => s.student_id === studentId)
+    
+    if (!student || !student.grades[subjectIndex]) {
+      return false
+    }
+
+    const subject = student.grades[subjectIndex].subject
+    
+    const quarterMap: Record<string, 'quarter1' | 'quarter2' | 'quarter3' | 'quarter4'> = {
+      quarter1: 'quarter1',
+      quarter2: 'quarter2',
+      quarter3: 'quarter3',
+      quarter4: 'quarter4'
+    }
+    
+    const quarterKey = quarterMap[quarter]
+    if (!quarterKey || value === null) {
+      return false
+    }
+    
+    const success = await updateStudentGrade(studentId, subject, quarterKey, value as number)
+    return success
   }
 )
