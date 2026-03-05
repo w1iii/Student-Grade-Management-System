@@ -74,6 +74,7 @@
   align-items: center;
   text-align: center;
   padding:1rem;
+  color:white;
 }
 
 .grades-main-content h2 {
@@ -99,22 +100,26 @@
 .grades-table th,
 .grades-table td {
   padding: 10px;
+  font-weight:200;
   text-align: center;
+}
+.grades-table th{
+  font-weight:600;
 }
 
 /* Vertical inner lines */
 .grades-table th:not(:last-child),
 .grades-table td:not(:last-child) {
-  border-right: 1px solid black;
+  border-right: 1px solid white;
 }
 
 /* Horizontal inner lines */
 .grades-table thead tr {
-  border-bottom: 1px solid black;
+  border-bottom: 1px solid white;
 }
 
 .grades-table tbody tr:not(:last-child) {
-  border-bottom: 1px solid black;
+  border-bottom: 1px solid white;
 }
 
 .hint{
@@ -152,8 +157,3 @@
   }
 }
 
-.empty-state{
-  color:white;
-  font-size:20px;
-  text-align:center;
-}

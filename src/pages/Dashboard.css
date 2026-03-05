@@ -56,9 +56,9 @@
 }
 
 .grade-item:hover {
-  border-color: green;
+  border-color: #4a90e2;
   background: #f0f6ff;
-  transform: translateY(-2px);
+  transform: translateX(4px);
 }
 
 .grade-item.active {

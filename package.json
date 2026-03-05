@@ -9,17 +9,22 @@
     "dev:react": "vite",
     "dev:electron": "electron .",
     "build": "tsc -b && vite build",
-    "build:electron": "tsc --project src/electron/tsconfig.json && mv dist-electron/main.js dist-electron/main.cjs && mv dist-electron/preload.js dist-electron/preload.cjs",
+    "build:electron": "tsc --project src/electron/tsconfig.json && mv dist-electron/main.js dist-electron/main.cjs && mv dist-electron/preload.js dist-electron/preload.cjs && mv dist-electron/csvStore.js dist-electron/csvStore.cjs",
     "lint": "eslint .",
     "preview": "vite preview"
   },
   "dependencies": {
+    "csv-parser": "^3.2.0",
+    "fast-csv": "^5.0.5",
+    "fs-extra": "^11.3.3",
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
-    "react-router-dom": "^7.11.0"
+    "react-router-dom": "^7.11.0",
+    "xlsx": "^0.18.5"
   },
   "devDependencies": {
     "@eslint/js": "^9.39.1",
+    "@types/fs-extra": "^11.0.4",
     "@types/node": "^24.10.1",
     "@types/react": "^19.2.5",
     "@types/react-dom": "^19.2.3",
