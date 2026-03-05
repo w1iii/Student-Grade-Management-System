@@ -45,11 +45,13 @@ declare global {
 
       getStudentGrades: (args: {
         studentId: number
+        gradeId: string
       }) => Promise<Grade[]>
 
       updateAllStudentGrades: (args: {
         studentId: number
         grades: Grade[]
+        gradeId: string
       }) => Promise<boolean>
 
       updateStudentGrade: (args: {
@@ -57,6 +59,7 @@ declare global {
         subjectIndex: number
         quarter: QuarterKey | string
         value: number | null
+        gradeId: string
       }) => Promise<boolean>
     }
   }

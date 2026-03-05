@@ -9,7 +9,7 @@
     "dev:react": "vite",
     "dev:electron": "electron .",
     "build": "tsc -b && vite build",
-    "build:electron": "tsc --project src/electron/tsconfig.json && mv dist-electron/main.js dist-electron/main.cjs && mv dist-electron/preload.js dist-electron/preload.cjs && cp src/studentData.csv .",
+    "build:electron": "tsc --project src/electron/tsconfig.json && mv dist-electron/main.js dist-electron/main.cjs && mv dist-electron/preload.js dist-electron/preload.cjs && cp -r src/students .",
     "lint": "eslint .",
     "preview": "vite preview"
   },

@@ -43,7 +43,7 @@ export default function Students() {
     setSelectedStudent(student)
     setEditingCell(null)
     setUnsavedChanges(false)
-    const grades = await window.api.getStudentGrades({ studentId: student.id })
+    const grades = await window.api.getStudentGrades({ studentId: student.id, gradeId: `grade_${gradeYear}` })
     setStudentGrades(grades)
   }
 
@@ -87,20 +87,19 @@ export default function Students() {
   const saveGrade = async (subjectIndex: number, quarter: string) => {
     if (!selectedStudent) return
     
-    setIsSaving(true)
     try {
       await window.api.updateStudentGrade({
         studentId: selectedStudent.id,
         subjectIndex,
         quarter,
         value: studentGrades[subjectIndex][quarter as keyof Grade],
+        gradeId: `grade_${gradeYear}`,
       })
       setUnsavedChanges(false)
     } catch (error) {
       console.error('Failed to save grade:', error)
       alert('Failed to save grade')
     } finally {
-      setIsSaving(false)
       setEditingCell(null)
     }
   }
@@ -108,18 +107,16 @@ export default function Students() {
   const handleSaveAll = async () => {
     if (!selectedStudent) return
     
-    setIsSaving(true)
     try {
       await window.api.updateAllStudentGrades({
         studentId: selectedStudent.id,
         grades: studentGrades,
+        gradeId: `grade_${gradeYear}`,
       })
       setUnsavedChanges(false)
     } catch (error) {
       console.error('Failed to save grades:', error)
       alert('Failed to save grades')
-    } finally {
-      setIsSaving(false)
     }
   }
 

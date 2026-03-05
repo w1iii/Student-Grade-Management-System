@@ -17,13 +17,18 @@ interface StudentGradesData {
   grades: Grade[]
 }
 
-const CSV_PATH = path.join(__dirname, '..', 'studentData.csv')
+function getCSVPath(gradeLevel: string): string {
+  return path.join(__dirname, '..', 'students', `grade_${gradeLevel.replace('grade_', '')}.csv`)
+}
 
-async function loadAllStudentsFromCSV(): Promise<StudentGradesData[]> {
-  if (!await fs.pathExists(CSV_PATH)) {
+async function loadStudentsFromGrade(gradeLevel: string): Promise<StudentGradesData[]> {
+  const csvPath = getCSVPath(gradeLevel)
+  
+  if (!await fs.pathExists(csvPath)) {
     return []
   }
-  const content = await fs.readFile(CSV_PATH, 'utf-8')
+  
+  const content = await fs.readFile(csvPath, 'utf-8')
   const lines = content.trim().split('\n')
   if (lines.length < 2) return []
 
@@ -54,10 +59,20 @@ async function loadAllStudentsFromCSV(): Promise<StudentGradesData[]> {
     })
   }
 
-  return Object.values(studentsMap)
+  const students = Object.values(studentsMap)
+  
+  students.sort((a, b) => {
+    const lastNameCompare = a.last_name.localeCompare(b.last_name)
+    if (lastNameCompare !== 0) return lastNameCompare
+    return a.first_name.localeCompare(b.first_name)
+  })
+
+  return students
 }
 
-async function saveAllStudentsToCSV(students: StudentGradesData[]): Promise<void> {
+async function saveStudentsToGrade(gradeLevel: string, students: StudentGradesData[]): Promise<void> {
+  const csvPath = getCSVPath(gradeLevel)
+  
   let csvContent = 'student_id,first_name,last_name,subject,quarter1,quarter2,quarter3,quarter4\n'
 
   for (const student of students) {
@@ -66,42 +81,7 @@ async function saveAllStudentsToCSV(students: StudentGradesData[]): Promise<void
     }
   }
 
-  await fs.writeFile(CSV_PATH, csvContent, 'utf-8')
-}
-
-async function updateStudentGrade(
-  studentId: number,
-  subject: string,
-  quarter: 'quarter1' | 'quarter2' | 'quarter3' | 'quarter4',
-  value: number
-): Promise<boolean> {
-  const students = await loadAllStudentsFromCSV()
-  const student = students.find(s => s.student_id === studentId)
-  
-  if (!student) return false
-
-  const grade = student.grades.find(g => g.subject === subject)
-  if (!grade) return false
-
-  grade[quarter] = value
-
-  await saveAllStudentsToCSV(students)
-  return true
-}
-
-async function updateAllStudentGrades(
-  studentId: number,
-  newGrades: Grade[]
-): Promise<boolean> {
-  const students = await loadAllStudentsFromCSV()
-  const student = students.find(s => s.student_id === studentId)
-  
-  if (!student) return false
-
-  student.grades = newGrades
-
-  await saveAllStudentsToCSV(students)
-  return true
+  await fs.writeFile(csvPath, csvContent, 'utf-8')
 }
 
 function createWindow() {
@@ -126,8 +106,9 @@ ipcMain.handle('login', async (_, credentials: { username: string; password: str
   }
 })
 
-ipcMain.handle('getStudents', async () => {
-  const students = await loadAllStudentsFromCSV()
+ipcMain.handle('getStudents', async (_, { gradeId }) => {
+  const gradeLevel = gradeId.replace('grade_', '')
+  const students = await loadStudentsFromGrade(gradeLevel)
   return students.map(student => ({
     id: student.student_id,
     first_name: student.first_name,
@@ -135,8 +116,9 @@ ipcMain.handle('getStudents', async () => {
   }))
 })
 
-ipcMain.handle('getStudentGrades', async (_, { studentId }) => {
-  const students = await loadAllStudentsFromCSV()
+ipcMain.handle('getStudentGrades', async (_, { studentId, gradeId }) => {
+  const gradeLevel = gradeId.replace('grade_', '')
+  const students = await loadStudentsFromGrade(gradeLevel)
   const student = students.find(s => s.student_id === studentId)
   if (student) {
     return student.grades
@@ -146,16 +128,24 @@ ipcMain.handle('getStudentGrades', async (_, { studentId }) => {
 
 ipcMain.handle(
   'updateAllStudentGrades',
-  async (_, { studentId, grades }) => {
-    const success = await updateAllStudentGrades(studentId, grades)
-    return success
+  async (_, { studentId, grades, gradeId }) => {
+    const gradeLevel = gradeId.replace('grade_', '')
+    const students = await loadStudentsFromGrade(gradeLevel)
+    const student = students.find(s => s.student_id === studentId)
+    
+    if (!student) return false
+    
+    student.grades = grades
+    await saveStudentsToGrade(gradeLevel, students)
+    return true
   }
 )
 
 ipcMain.handle(
   'updateStudentGrade',
-  async (_, { studentId, subjectIndex, quarter, value }) => {
-    const students = await loadAllStudentsFromCSV()
+  async (_, { studentId, subjectIndex, quarter, value, gradeId }) => {
+    const gradeLevel = gradeId.replace('grade_', '')
+    const students = await loadStudentsFromGrade(gradeLevel)
     const student = students.find(s => s.student_id === studentId)
     
     if (!student || !student.grades[subjectIndex]) {
@@ -176,7 +166,8 @@ ipcMain.handle(
       return false
     }
     
-    const success = await updateStudentGrade(studentId, subject, quarterKey, value as number)
-    return success
+    student.grades[subjectIndex][quarterKey] = value as number
+    await saveStudentsToGrade(gradeLevel, students)
+    return true
   }
 )
