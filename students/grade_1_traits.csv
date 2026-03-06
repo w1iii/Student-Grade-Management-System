@@ -4,7 +4,7 @@ student_id,trait,q1,q2,q3,q4
 1,Creativity,33,14,1,4
 1,Helpfulness and cooperation,24,5,4,5
 1,Honesty and integrity,5,6,5,1
-1,Physical well-being,123122,2,1,2
+1,Physical well-being,1,2,1,2
 1,Respect for authority and others,4,5,2,4
 1,Self-discipline & Sense of responsibility,5,6,3,5
 1,Punctuality,2,1,5,4
@@ -12,16 +12,16 @@ student_id,trait,q1,q2,q3,q4
 2,Care for environment,5,1,0,0
 2,Consideration for others,2,4,12,32
 2,Creativity,3,2,0,0
-2,Helpfulness and cooperation,2,4,32,0
+2,Helpfulness and cooperation,2,4,32,2
 2,Honesty and integrity,4,1,3,0
 2,Physical well-being,1,4,0,4
 2,Respect for authority and others,2,5,2,0
 2,Self-discipline & Sense of responsibility,4,1,0,0
-2,Punctuality,2,0,0,0
-2,Wise use of things,3,23,0,0
-3,Care for environment,5,0,0,0
+2,Punctuality,2,0,3,0
+2,Wise use of things,3,23,4,0
+3,Care for environment,5,0,2,0
 3,Consideration for others,3,0,0,3
-3,Creativity,5,0,0,5
+3,Creativity,5,0,2,5
 3,Helpfulness and cooperation,2,0,0,0
 3,Honesty and integrity,0,1,0,0
 3,Physical well-being,2,23,0,0
