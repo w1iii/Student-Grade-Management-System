@@ -102,14 +102,34 @@ async function loadStudentsFromGrade(gradeLevel: string): Promise<StudentData[]>
   if (await fs.pathExists(traitsPath)) {
     const traitsContent = await fs.readFile(traitsPath, 'utf-8')
     const traitsLines = traitsContent.trim().split('\n')
+    const defaultTraitNames = [
+      'Care for environment',
+      'Consideration for others',
+      'Creativity',
+      'Helpfulness and cooperation',
+      'Honesty and integrity',
+      'Physical well-being',
+      'Respect for authority and others',
+      'Self-discipline & Sense of responsibility',
+      'Punctuality',
+      'Wise use of things'
+    ]
     for (let i = 1; i < traitsLines.length; i++) {
       const line = traitsLines[i].trim()
       if (!line) continue
-      const [studentId, trait, q1, q2, q3, q4] = line.split(',')
+      const parts = line.split(',')
+      if (parts.length < 6) continue
+      const studentId = parts[0]
+      const trait = parts[1]
+      const q1 = parts[2]
+      const q2 = parts[3]
+      const q3 = parts[4]
+      const q4 = parts[5]
       const id = parseInt(studentId)
-      if (studentsMap[id]) {
+      const traitIndex = i - 1
+      if (!isNaN(id) && studentsMap[id]) {
         studentsMap[id].traits.push({
-          trait: trait,
+          trait: trait || defaultTraitNames[traitIndex] || '',
           quarter1: parseInt(q1) || 0,
           quarter2: parseInt(q2) || 0,
           quarter3: parseInt(q3) || 0,
@@ -125,9 +145,15 @@ async function loadStudentsFromGrade(gradeLevel: string): Promise<StudentData[]>
     for (let i = 1; i < attendanceLines.length; i++) {
       const line = attendanceLines[i].trim()
       if (!line) continue
-      const [studentId, month, daysOfSchool, daysPresent, daysTardy] = line.split(',')
+      const parts = line.split(',')
+      if (parts.length < 5) continue
+      const studentId = parts[0]
+      const month = parts[1]
+      const daysOfSchool = parts[2]
+      const daysPresent = parts[3]
+      const daysTardy = parts[4]
       const id = parseInt(studentId)
-      if (studentsMap[id]) {
+      if (!isNaN(id) && studentsMap[id]) {
         studentsMap[id].attendance.push({
           month: month,
           daysOfSchool: parseInt(daysOfSchool) || 0,
@@ -165,17 +191,38 @@ async function saveStudentsToGrade(gradeLevel: string, students: StudentData[]):
   await fs.writeFile(csvPath, csvContent, 'utf-8')
 
   let traitsContent = 'student_id,trait,q1,q2,q3,q4\n'
+  const defaultTraitNames = [
+    'Care for environment',
+    'Consideration for others',
+    'Creativity',
+    'Helpfulness and cooperation',
+    'Honesty and integrity',
+    'Physical well-being',
+    'Respect for authority and others',
+    'Self-discipline & Sense of responsibility',
+    'Punctuality',
+    'Wise use of things'
+  ]
   for (const student of students) {
-    for (const trait of student.traits) {
-      traitsContent += `${student.student_id},${trait.trait},${trait.quarter1},${trait.quarter2},${trait.quarter3},${trait.quarter4}\n`
+    if (student.traits && student.traits.length > 0) {
+      for (let i = 0; i < student.traits.length; i++) {
+        const trait = student.traits[i]
+        const traitName = trait.trait || defaultTraitNames[i] || ''
+        traitsContent += `${student.student_id},${traitName},${trait.quarter1},${trait.quarter2},${trait.quarter3},${trait.quarter4}\n`
+      }
     }
   }
   await fs.writeFile(traitsPath, traitsContent, 'utf-8')
 
   let attendanceContent = 'student_id,month,daysOfSchool,daysPresent,daysTardy\n'
+  const defaultMonths = ['Jun', 'Jul', 'Aug', 'Sept', 'Oct', 'Nov', 'Dec', 'Jan', 'Feb', 'Mar']
   for (const student of students) {
-    for (const att of student.attendance) {
-      attendanceContent += `${student.student_id},${att.month},${att.daysOfSchool},${att.daysPresent},${att.daysTardy}\n`
+    if (student.attendance && student.attendance.length > 0) {
+      for (let i = 0; i < student.attendance.length; i++) {
+        const att = student.attendance[i]
+        const monthName = att.month || defaultMonths[i] || ''
+        attendanceContent += `${student.student_id},${monthName},${att.daysOfSchool},${att.daysPresent},${att.daysTardy}\n`
+      }
     }
   }
   await fs.writeFile(attendancePath, attendanceContent, 'utf-8')

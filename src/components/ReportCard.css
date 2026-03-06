@@ -197,14 +197,16 @@
 }
 
 .grade-input {
-  width: 30px;
-  padding: 1px 2px;
+  width: 25px;
+  padding: 0;
   text-align: center;
   border: 1px solid #1a4a6e;
-  font-size: 10px;
+  font-size: 9px;
   font-family: inherit;
   box-sizing: border-box;
   margin: 0;
+  height: 16px;
+  line-height: 1;
 }
 
 .character-section {
