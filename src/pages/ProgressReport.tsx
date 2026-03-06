@@ -74,7 +74,7 @@ export default function ProgressReport() {
         <div className="student-info">
           <div className="info-row">
             <span className="info-label">LRN:</span>
-            <span className="info-value">404147150594</span>
+            <span className="info-value"></span>
             <span className="info-label ml-auto">Adviser:</span>
             <span className="info-value"></span>
           </div>

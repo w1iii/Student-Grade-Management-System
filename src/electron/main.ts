@@ -151,6 +151,8 @@ async function loadStudentsFromGrade(gradeLevel: string): Promise<StudentData[]>
 
 async function saveStudentsToGrade(gradeLevel: string, students: StudentData[]): Promise<void> {
   const csvPath = getCSVPath(gradeLevel)
+  const traitsPath = getTraitsCSVPath(gradeLevel)
+  const attendancePath = getAttendanceCSVPath(gradeLevel)
   
   let csvContent = 'student_id,LRN,first_name,last_name,adviser,section,sy,subject,q1,q2,q3,q4\n'
 
@@ -161,6 +163,22 @@ async function saveStudentsToGrade(gradeLevel: string, students: StudentData[]):
   }
 
   await fs.writeFile(csvPath, csvContent, 'utf-8')
+
+  let traitsContent = 'student_id,trait,q1,q2,q3,q4\n'
+  for (const student of students) {
+    for (const trait of student.traits) {
+      traitsContent += `${student.student_id},${trait.trait},${trait.quarter1},${trait.quarter2},${trait.quarter3},${trait.quarter4}\n`
+    }
+  }
+  await fs.writeFile(traitsPath, traitsContent, 'utf-8')
+
+  let attendanceContent = 'student_id,month,daysOfSchool,daysPresent,daysTardy\n'
+  for (const student of students) {
+    for (const att of student.attendance) {
+      attendanceContent += `${student.student_id},${att.month},${att.daysOfSchool},${att.daysPresent},${att.daysTardy}\n`
+    }
+  }
+  await fs.writeFile(attendancePath, attendanceContent, 'utf-8')
 }
 
 function createWindow() {
@@ -258,6 +276,74 @@ ipcMain.handle(
     }
     
     student.grades[subjectIndex][quarterKey] = value as number
+    await saveStudentsToGrade(gradeLevel, students)
+    return true
+  }
+)
+
+ipcMain.handle(
+  'updateStudentTrait',
+  async (_, { studentId, traitIndex, quarter, value, gradeId }) => {
+    const gradeLevel = gradeId.replace('grade_', '')
+    const students = await loadStudentsFromGrade(gradeLevel)
+    const student = students.find(s => s.student_id === studentId)
+    
+    if (!student) return false
+    
+    if (!student.traits[traitIndex]) {
+      student.traits[traitIndex] = {
+        trait: '',
+        quarter1: 0,
+        quarter2: 0,
+        quarter3: 0,
+        quarter4: 0
+      }
+    }
+    
+    const quarterMap: Record<string, 'quarter1' | 'quarter2' | 'quarter3' | 'quarter4'> = {
+      quarter1: 'quarter1',
+      quarter2: 'quarter2',
+      quarter3: 'quarter3',
+      quarter4: 'quarter4'
+    }
+    
+    const quarterKey = quarterMap[quarter]
+    if (!quarterKey) return false
+    
+    student.traits[traitIndex][quarterKey] = value as number
+    await saveStudentsToGrade(gradeLevel, students)
+    return true
+  }
+)
+
+ipcMain.handle(
+  'updateStudentAttendance',
+  async (_, { studentId, monthIndex, field, value, gradeId }) => {
+    const gradeLevel = gradeId.replace('grade_', '')
+    const students = await loadStudentsFromGrade(gradeLevel)
+    const student = students.find(s => s.student_id === studentId)
+    
+    if (!student) return false
+    
+    if (!student.attendance[monthIndex]) {
+      student.attendance[monthIndex] = {
+        month: '',
+        daysOfSchool: 0,
+        daysPresent: 0,
+        daysTardy: 0
+      }
+    }
+    
+    if (field === 'daysOfSchool') {
+      student.attendance[monthIndex].daysOfSchool = value as number
+    } else if (field === 'daysPresent') {
+      student.attendance[monthIndex].daysPresent = value as number
+    } else if (field === 'daysTardy') {
+      student.attendance[monthIndex].daysTardy = value as number
+    } else {
+      return false
+    }
+    
     await saveStudentsToGrade(gradeLevel, students)
     return true
   }

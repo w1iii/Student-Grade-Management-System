@@ -61,12 +61,105 @@ export default function Students() {
     }
   }
 
+  const handleTraitChange = (traitIndex: number, quarter: string, value: string) => {
+    if (!studentData) return
+    const newTraits = studentData.traits ? [...studentData.traits] : []
+    const numValue = value === '' ? 0 : parseInt(value)
+    
+    if (newTraits[traitIndex]) {
+      newTraits[traitIndex] = {
+        ...newTraits[traitIndex],
+        [quarter]: numValue,
+      }
+    } else {
+      newTraits[traitIndex] = {
+        trait: '',
+        quarter1: 0,
+        quarter2: 0,
+        quarter3: 0,
+        quarter4: 0,
+        [quarter]: numValue,
+      }
+    }
+    
+    setStudentData({ ...studentData, traits: newTraits })
+  }
+
+  const saveTrait = async (traitIndex: number, quarter: string) => {
+    if (!selectedStudent || !studentData || !studentData.traits) return
+    
+    try {
+      await window.api.updateStudentTrait({
+        studentId: selectedStudent.id,
+        traitIndex,
+        quarter,
+        value: studentData.traits[traitIndex]?.[quarter as keyof Trait] as number || 0,
+        gradeId: `grade_${gradeYear}`,
+      })
+    } catch (error) {
+      console.error('Failed to save trait:', error)
+      alert('Failed to save trait')
+    } finally {
+      setEditingCell(null)
+    }
+  }
+
+  const handleAttendanceChange = (monthIndex: number, field: string, value: string) => {
+    if (!studentData) return
+    const newAttendance = studentData.attendance ? [...studentData.attendance] : []
+    const numValue = value === '' ? 0 : parseInt(value)
+    
+    if (newAttendance[monthIndex]) {
+      newAttendance[monthIndex] = {
+        ...newAttendance[monthIndex],
+        [field]: numValue,
+      }
+    } else {
+      newAttendance[monthIndex] = {
+        month: '',
+        daysOfSchool: 0,
+        daysPresent: 0,
+        daysTardy: 0,
+        [field]: numValue,
+      }
+    }
+    
+    setStudentData({ ...studentData, attendance: newAttendance })
+  }
+
+  const saveAttendance = async (monthIndex: number, field: string) => {
+    if (!selectedStudent || !studentData || !studentData.attendance) return
+    
+    try {
+      await window.api.updateStudentAttendance({
+        studentId: selectedStudent.id,
+        monthIndex,
+        field,
+        value: studentData.attendance[monthIndex]?.[field as keyof Attendance] as number || 0,
+        gradeId: `grade_${gradeYear}`,
+      })
+    } catch (error) {
+      console.error('Failed to save attendance:', error)
+      alert('Failed to save attendance')
+    } finally {
+      setEditingCell(null)
+    }
+  }
+
   const handleCellClick = (cellId: string) => {
     setEditingCell(cellId)
   }
 
   const handleCellBlur = (subjectIndex: number, quarter: string) => {
     saveGrade(subjectIndex, quarter)
+  }
+
+  const handleTraitBlur = (traitIndex: number, quarter: string) => {
+    saveTrait(traitIndex, quarter)
+  }
+
+  const handleAttendanceBlur = (monthIndex: number, field: string) => {
+    saveAttendance(monthIndex, field)
   }
 
   const getGradeLevelName = (): string => {
@@ -122,7 +215,11 @@ export default function Students() {
               traits={studentData.traits}
               attendance={studentData.attendance}
               onGradeChange={handleGradeChange}
+              onTraitChange={handleTraitChange}
+              onAttendanceChange={handleAttendanceChange}
               onCellBlur={handleCellBlur}
+              onTraitBlur={handleTraitBlur}
+              onAttendanceBlur={handleAttendanceBlur}
               editingCell={editingCell}
               onCellClick={handleCellClick}
             />

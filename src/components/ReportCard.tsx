@@ -39,7 +39,11 @@ interface ReportCardProps {
   traits?: Trait[]
   attendance?: Attendance[]
   onGradeChange?: (subjectIndex: number, quarter: string, value: string) => void
+  onTraitChange?: (traitIndex: number, quarter: string, value: string) => void
+  onAttendanceChange?: (monthIndex: number, field: string, value: string) => void
   onCellBlur?: (subjectIndex: number, quarter: string) => void
+  onTraitBlur?: (traitIndex: number, quarter: string) => void
+  onAttendanceBlur?: (monthIndex: number, field: string) => void
   editingCell?: string | null
   onCellClick?: (cellId: string) => void
 }
@@ -112,7 +116,11 @@ export default function ReportCard({
   traits,
   attendance,
   onGradeChange,
+  onTraitChange,
+  onAttendanceChange,
   onCellBlur,
+  onTraitBlur,
+  onAttendanceBlur,
   editingCell,
   onCellClick
 }: ReportCardProps) {
@@ -262,10 +270,33 @@ export default function ReportCard({
                 {displayTraits.map((row, i) => (
                   <tr key={i}>
                     <td className="trait-name">{row.trait}</td>
-                    <td className="cb-cell">{row.quarter1 || '-'}</td>
-                    <td className="cb-cell">{row.quarter2 || '-'}</td>
-                    <td className="cb-cell">{row.quarter3 || '-'}</td>
-                    <td className="cb-cell">{row.quarter4 || '-'}</td>
+                    {['quarter1', 'quarter2', 'quarter3', 'quarter4'].map((quarter) => {
+                      const cellId = `trait-${i}-${quarter}`
+                      const isEditing = editingCell === cellId
+                      const value = row[quarter as keyof Trait]
+                      return (
+                        <td
+                          key={quarter}
+                          className="cb-cell"
+                          onClick={() => onCellClick?.(cellId)}
+                        >
+                          {isEditing && onTraitChange ? (
+                            <input
+                              type="number"
+                              min="0"
+                              max="5"
+                              autoFocus
+                              value={value ?? ''}
+                              onChange={(e) => onTraitChange(i, quarter, e.target.value)}
+                              onBlur={() => onTraitBlur?.(i, quarter)}
+                              className="grade-input"
+                            />
+                          ) : (
+                            <span>{value || '-'}</span>
+                          )}
+                        </td>
+                      )
+                    })}
                   </tr>
                 ))}
                 <tr className="average-row">
@@ -309,23 +340,89 @@ export default function ReportCard({
             <tbody>
               <tr>
                 <td className="att-row-label">Days of School</td>
-                {displayAttendance.map((att, i) => (
-                  <td key={i} className="att-cell">{att.daysOfSchool || '-'}</td>
-                ))}
+                {displayAttendance.map((att, i) => {
+                  const cellId = `att-${i}-daysOfSchool`
+                  const isEditing = editingCell === cellId
+                  return (
+                    <td
+                      key={i}
+                      className="att-cell"
+                      onClick={() => onCellClick?.(cellId)}
+                    >
+                      {isEditing && onAttendanceChange ? (
+                        <input
+                          type="number"
+                          min="0"
+                          autoFocus
+                          value={att.daysOfSchool ?? ''}
+                          onChange={(e) => onAttendanceChange(i, 'daysOfSchool', e.target.value)}
+                          onBlur={() => onAttendanceBlur?.(i, 'daysOfSchool')}
+                          className="grade-input"
+                        />
+                      ) : (
+                        <span>{att.daysOfSchool || '-'}</span>
+                      )}
+                    </td>
+                  )
+                })}
                 <td className="att-cell bold-cell">{totals.daysOfSchool || '-'}</td>
               </tr>
               <tr>
                 <td className="att-row-label">Days Present</td>
-                {displayAttendance.map((att, i) => (
-                  <td key={i} className="att-cell">{att.daysPresent || '-'}</td>
-                ))}
+                {displayAttendance.map((att, i) => {
+                  const cellId = `att-${i}-daysPresent`
+                  const isEditing = editingCell === cellId
+                  return (
+                    <td
+                      key={i}
+                      className="att-cell"
+                      onClick={() => onCellClick?.(cellId)}
+                    >
+                      {isEditing && onAttendanceChange ? (
+                        <input
+                          type="number"
+                          min="0"
+                          autoFocus
+                          value={att.daysPresent ?? ''}
+                          onChange={(e) => onAttendanceChange(i, 'daysPresent', e.target.value)}
+                          onBlur={() => onAttendanceBlur?.(i, 'daysPresent')}
+                          className="grade-input"
+                        />
+                      ) : (
+                        <span>{att.daysPresent || '-'}</span>
+                      )}
+                    </td>
+                  )
+                })}
                 <td className="att-cell bold-cell">{totals.daysPresent || '-'}</td>
               </tr>
               <tr>
                 <td className="att-row-label">Days Tardy</td>
-                {displayAttendance.map((att, i) => (
-                  <td key={i} className="att-cell">{att.daysTardy || '-'}</td>
-                ))}
+                {displayAttendance.map((att, i) => {
+                  const cellId = `att-${i}-daysTardy`
+                  const isEditing = editingCell === cellId
+                  return (
+                    <td
+                      key={i}
+                      className="att-cell"
+                      onClick={() => onCellClick?.(cellId)}
+                    >
+                      {isEditing && onAttendanceChange ? (
+                        <input
+                          type="number"
+                          min="0"
+                          autoFocus
+                          value={att.daysTardy ?? ''}
+                          onChange={(e) => onAttendanceChange(i, 'daysTardy', e.target.value)}
+                          onBlur={() => onAttendanceBlur?.(i, 'daysTardy')}
+                          className="grade-input"
+                        />
+                      ) : (
+                        <span>{att.daysTardy || '-'}</span>
+                      )}
+                    </td>
+                  )
+                })}
                 <td className="att-cell bold-cell">{totals.daysTardy || '-'}</td>
               </tr>
             </tbody>

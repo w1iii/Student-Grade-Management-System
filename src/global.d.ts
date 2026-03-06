@@ -79,6 +79,22 @@ declare global {
         value: number | null
         gradeId: string
       }) => Promise<boolean>
+
+      updateStudentTrait: (args: {
+        studentId: number
+        traitIndex: number
+        quarter: QuarterKey | string
+        value: number
+        gradeId: string
+      }) => Promise<boolean>
+
+      updateStudentAttendance: (args: {
+        studentId: number
+        monthIndex: number
+        field: string
+        value: number
+        gradeId: string
+      }) => Promise<boolean>
     }
   }
 }
