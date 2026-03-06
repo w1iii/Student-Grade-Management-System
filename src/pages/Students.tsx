@@ -104,21 +104,6 @@ export default function Students() {
     }
   }
 
-  const handleSaveAll = async () => {
-    if (!selectedStudent) return
-    
-    try {
-      await window.api.updateAllStudentGrades({
-        studentId: selectedStudent.id,
-        grades: studentGrades,
-        gradeId: `grade_${gradeYear}`,
-      })
-      setUnsavedChanges(false)
-    } catch (error) {
-      console.error('Failed to save grades:', error)
-      alert('Failed to save grades')
-    }
-  }
 
   const handleCellBlur = (subjectIndex: number, quarter: string) => {
     // Auto-save on blur (instant save on edit)

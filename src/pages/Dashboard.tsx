@@ -40,7 +40,8 @@ export default function Dashboard() {
     // extract number from "grade_10" → 10
     const gradeNumber = gradeId.split('_')[1]
 
-    navigate(`/students/${gradeNumber}`)
+    // navigate(`/students/${gradeNumber}`)
+    navigate('/report')
   }
 
   const renderSection = (title: string, gradeList: Grade[]) => (

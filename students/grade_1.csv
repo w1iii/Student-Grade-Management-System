@@ -1,5 +1,5 @@
-student_id,first_name,last_name,subject,quarter1,quarter2,quarter3,quarter4
-1,Lucas,Adams,Math,74,84,74,87
+student_id,first_name,last_name,subject, 1st, 2nd, 3rd, 4th
+1,Lucas,Adams,Math,99,84,74,87
 1,Lucas,Adams,English,82,80,85,83
 1,Lucas,Adams,Science,90,88,92,89
 1,Lucas,Adams,History,85,82,88,86
