@@ -308,7 +308,7 @@ export default function ReportCard({
               </thead>
               <tbody>
                 {displayTraits.map((row, i) => (
-                  <tr key={i}>
+                  <tr key={row.trait || `trait-${i}`}>
                     <td className="trait-name">{row.trait}</td>
                     {['quarter1', 'quarter2', 'quarter3', 'quarter4'].map((quarter) => {
                       const cellId = `trait-${i}-${quarter}`
@@ -376,7 +376,7 @@ export default function ReportCard({
               <tr>
                 <th className="att-label-header">ATTENDANCE</th>
                 {displayAttendance.map((att, i) => (
-                  <th key={i} className="att-month">{att.month}</th>
+                  <th key={att.month || `month-${i}`} className="att-month">{att.month}</th>
                 ))}
                 <th className="att-month">Total</th>
               </tr>

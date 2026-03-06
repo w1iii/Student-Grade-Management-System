@@ -126,7 +126,9 @@
   padding: 4px 8px;
   text-align: center;
   font-size: 11px;
-  overflow: hidden;
+  overflow: visible;
+  white-space: nowrap;
+  min-width: 40px;
 }
 
 .subjects-header {
@@ -207,6 +209,7 @@
   margin: 0;
   height: 16px;
   line-height: 1;
+  display: inline-block;
 }
 
 .character-section {
@@ -237,7 +240,9 @@
   padding: 3px 6px;
   text-align: center;
   font-size: 10px;
-  overflow: hidden;
+  overflow: visible;
+  white-space: nowrap;
+  min-width: 35px;
 }
 
 .trait-header {
@@ -319,7 +324,9 @@
   padding: 4px;
   text-align: center;
   font-size: 10px;
-  overflow: hidden;
+  overflow: visible;
+  white-space: nowrap;
+  min-width: 40px;
 }
 
 .att-label-header {
