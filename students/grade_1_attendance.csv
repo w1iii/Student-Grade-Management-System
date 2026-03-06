@@ -26,9 +26,12 @@ student_id,month,daysOfSchool,daysPresent,daysTardy
 3,Oct,23,24,0
 3,Nov,40,30,0
 3,Dec,23,0,1
-5,Jun,0,0,0
-5,Jul,0,0,0
-5,Aug,0,0,0
-5,Sept,0,0,0
-5,Oct,32,0,0
+5,Jun,2,0,0
+5,Jul,1,24,0
+5,Aug,3,0,0
+5,Sept,0,4,0
+5,Oct,32,0,5
 5,Nov,21,0,0
+5,Dec,45,0,0
+5,Jan,2,0,0
+5,Feb,2,0,0

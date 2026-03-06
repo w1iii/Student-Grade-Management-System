@@ -114,14 +114,14 @@
   margin-left: auto;
 }
 
-.grades-table {
+.report-grades-table {
   width: 100%;
   border-collapse: collapse;
   margin-bottom: 15px;
 }
 
-.grades-table th,
-.grades-table td {
+.report-grades-table th,
+.report-grades-table td {
   border: 1px solid #333;
   padding: 4px 8px;
   text-align: center;

@@ -215,7 +215,7 @@ export default function ReportCard({
           </div>
         </div>
 
-        <table className="grades-table">
+        <table className="report-grades-table">
           <thead>
             <tr>
               <th rowSpan={2} className="subjects-header">SUBJECTS</th>
