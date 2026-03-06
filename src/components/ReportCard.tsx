@@ -124,20 +124,41 @@ export default function ReportCard({
   editingCell,
   onCellClick
 }: ReportCardProps) {
-  const displayTraits = (() => {
-    if (!traits || traits.length === 0) return defaultTraits
-    const filled = [...traits]
-    while (filled.length < defaultTraits.length) {
-      filled.push(defaultTraits[filled.length])
+  const getDefaultTrait = (i: number): Trait => ({
+    trait: defaultTraits[i]?.trait || '',
+    quarter1: 0,
+    quarter2: 0,
+    quarter3: 0,
+    quarter4: 0
+  })
+  
+  const getDefaultAttendance = (i: number): Attendance => ({
+    month: defaultAttendance[i]?.month || '',
+    daysOfSchool: 0,
+    daysPresent: 0,
+    daysTardy: 0
+  })
+  
+  const displayTraits: Trait[] = (() => {
+    const filled: Trait[] = []
+    for (let i = 0; i < defaultTraits.length; i++) {
+      if (traits && traits[i]) {
+        filled.push({ ...traits[i] })
+      } else {
+        filled.push(getDefaultTrait(i))
+      }
     }
     return filled
   })()
   
-  const displayAttendance = (() => {
-    if (!attendance || attendance.length === 0) return defaultAttendance
-    const filled = [...attendance]
-    while (filled.length < defaultAttendance.length) {
-      filled.push(defaultAttendance[filled.length])
+  const displayAttendance: Attendance[] = (() => {
+    const filled: Attendance[] = []
+    for (let i = 0; i < defaultAttendance.length; i++) {
+      if (attendance && attendance[i]) {
+        filled.push({ ...attendance[i] })
+      } else {
+        filled.push(getDefaultAttendance(i))
+      }
     }
     return filled
   })()

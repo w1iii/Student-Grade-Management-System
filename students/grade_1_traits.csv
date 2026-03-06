@@ -1,5 +1,7 @@
 student_id,trait,q1,q2,q3,q4
-1,,2,0,0,0
-1,,5,0,0,0
-1,,7,0,0,0
-4,,3,0,0,0
+1,Care for environment,1,0,0,0
+1,Consideration for others,3,0,0,0
+1,Creativity,4,0,0,0
+1,Helpfulness and cooperation,4,0,0,0
+1,Honesty and integrity,3,2,0,0
+1,Physical well-being,5,0,0,0
