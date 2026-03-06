@@ -1,11 +1,11 @@
 student_id,LRN,first_name,last_name,adviser,section,sy,subject,q1,q2,q3,q4
-1,123456789012,Lucas,Adams,Mrs. Johnson,1-A,2024-2025,Math,50,84,0,87
-1,123456789012,Lucas,Adams,Mrs. Johnson,1-A,2024-2025,English,82,80,85,83
+1,123456789012,Lucas,Adams,Mrs. Johnson,1-A,2024-2025,Math,50222,84,0,87
+1,123456789012,Lucas,Adams,Mrs. Johnson,1-A,2024-2025,English,82,80,85,1
 1,123456789012,Lucas,Adams,Mrs. Johnson,1-A,2024-2025,Science,90,88,92,89
 1,123456789012,Lucas,Adams,Mrs. Johnson,1-A,2024-2025,History,85,82,88,86
 1,123456789012,Lucas,Adams,Mrs. Johnson,1-A,2024-2025,PE,92,90,94,91
 1,123456789012,Lucas,Adams,Mrs. Johnson,1-A,2024-2025,Art,87,85,89,88
-1,123456789012,Lucas,Adams,Mrs. Johnson,1-A,2024-2025,Filipino,88,86,90,87
+1,123456789012,Lucas,Adams,Mrs. Johnson,1-A,2024-2025,Filipino,82,8,1,87
 1,123456789012,Lucas,Adams,Mrs. Johnson,1-A,2024-2025,Araling Panlipunan,84,82,86,84
 2,123456789013,Mia,Anderson,Mrs. Johnson,1-A,2024-2025,Math,95,92,94,93
 2,123456789013,Mia,Anderson,Mrs. Johnson,1-A,2024-2025,English,88,85,90,87

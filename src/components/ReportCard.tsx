@@ -220,6 +220,10 @@ export default function ReportCard({
                             value={value ?? ''}
                             onChange={(e) => onGradeChange(i, quarter, e.target.value)}
                             onBlur={() => onCellBlur?.(i, quarter)}
+                            onKeyDown={(e) => {
+                              if (e.key === 'Enter') onCellBlur?.(i, quarter)
+                              if (e.key === 'Escape') onCellClick?.('')
+                            }}
                             className="grade-input"
                           />
                         ) : (
@@ -289,6 +293,10 @@ export default function ReportCard({
                               value={value ?? ''}
                               onChange={(e) => onTraitChange(i, quarter, e.target.value)}
                               onBlur={() => onTraitBlur?.(i, quarter)}
+                              onKeyDown={(e) => {
+                                if (e.key === 'Enter') onTraitBlur?.(i, quarter)
+                                if (e.key === 'Escape') onCellClick?.('')
+                              }}
                               className="grade-input"
                             />
                           ) : (
@@ -357,6 +365,10 @@ export default function ReportCard({
                           value={att.daysOfSchool ?? ''}
                           onChange={(e) => onAttendanceChange(i, 'daysOfSchool', e.target.value)}
                           onBlur={() => onAttendanceBlur?.(i, 'daysOfSchool')}
+                          onKeyDown={(e) => {
+                            if (e.key === 'Enter') onAttendanceBlur?.(i, 'daysOfSchool')
+                            if (e.key === 'Escape') onCellClick?.('')
+                          }}
                           className="grade-input"
                         />
                       ) : (
@@ -386,6 +398,10 @@ export default function ReportCard({
                           value={att.daysPresent ?? ''}
                           onChange={(e) => onAttendanceChange(i, 'daysPresent', e.target.value)}
                           onBlur={() => onAttendanceBlur?.(i, 'daysPresent')}
+                          onKeyDown={(e) => {
+                            if (e.key === 'Enter') onAttendanceBlur?.(i, 'daysPresent')
+                            if (e.key === 'Escape') onCellClick?.('')
+                          }}
                           className="grade-input"
                         />
                       ) : (
@@ -415,6 +431,10 @@ export default function ReportCard({
                           value={att.daysTardy ?? ''}
                           onChange={(e) => onAttendanceChange(i, 'daysTardy', e.target.value)}
                           onBlur={() => onAttendanceBlur?.(i, 'daysTardy')}
+                          onKeyDown={(e) => {
+                            if (e.key === 'Enter') onAttendanceBlur?.(i, 'daysTardy')
+                            if (e.key === 'Escape') onCellClick?.('')
+                          }}
                           className="grade-input"
                         />
                       ) : (

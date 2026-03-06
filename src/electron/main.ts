@@ -284,20 +284,30 @@ ipcMain.handle(
 ipcMain.handle(
   'updateStudentTrait',
   async (_, { studentId, traitIndex, quarter, value, gradeId }) => {
+    console.log('updateStudentTrait called:', { studentId, traitIndex, quarter, value, gradeId })
     const gradeLevel = gradeId.replace('grade_', '')
     const students = await loadStudentsFromGrade(gradeLevel)
     const student = students.find(s => s.student_id === studentId)
     
-    if (!student) return false
+    console.log('Found student:', student?.student_id)
     
-    if (!student.traits[traitIndex]) {
-      student.traits[traitIndex] = {
+    if (!student) {
+      console.error('Student not found')
+      return false
+    }
+    
+    if (!student.traits) {
+      student.traits = []
+    }
+    
+    while (student.traits.length <= traitIndex) {
+      student.traits.push({
         trait: '',
         quarter1: 0,
         quarter2: 0,
         quarter3: 0,
         quarter4: 0
-      }
+      })
     }
     
     const quarterMap: Record<string, 'quarter1' | 'quarter2' | 'quarter3' | 'quarter4'> = {
@@ -308,10 +318,14 @@ ipcMain.handle(
     }
     
     const quarterKey = quarterMap[quarter]
-    if (!quarterKey) return false
+    if (!quarterKey) {
+      console.error('Invalid quarter:', quarter)
+      return false
+    }
     
     student.traits[traitIndex][quarterKey] = value as number
     await saveStudentsToGrade(gradeLevel, students)
+    console.log('Trait saved successfully')
     return true
   }
 )
@@ -319,19 +333,29 @@ ipcMain.handle(
 ipcMain.handle(
   'updateStudentAttendance',
   async (_, { studentId, monthIndex, field, value, gradeId }) => {
+    console.log('updateStudentAttendance called:', { studentId, monthIndex, field, value, gradeId })
     const gradeLevel = gradeId.replace('grade_', '')
     const students = await loadStudentsFromGrade(gradeLevel)
     const student = students.find(s => s.student_id === studentId)
     
-    if (!student) return false
+    console.log('Found student:', student?.student_id)
     
-    if (!student.attendance[monthIndex]) {
-      student.attendance[monthIndex] = {
+    if (!student) {
+      console.error('Student not found')
+      return false
+    }
+    
+    if (!student.attendance) {
+      student.attendance = []
+    }
+    
+    while (student.attendance.length <= monthIndex) {
+      student.attendance.push({
         month: '',
         daysOfSchool: 0,
         daysPresent: 0,
         daysTardy: 0
-      }
+      })
     }
     
     if (field === 'daysOfSchool') {
@@ -341,10 +365,12 @@ ipcMain.handle(
     } else if (field === 'daysTardy') {
       student.attendance[monthIndex].daysTardy = value as number
     } else {
+      console.error('Invalid field:', field)
       return false
     }
     
     await saveStudentsToGrade(gradeLevel, students)
+    console.log('Attendance saved successfully')
     return true
   }
 )
