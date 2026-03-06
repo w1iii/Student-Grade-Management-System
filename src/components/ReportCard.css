@@ -126,6 +126,7 @@
   padding: 4px 8px;
   text-align: center;
   font-size: 11px;
+  overflow: hidden;
 }
 
 .subjects-header {
@@ -196,12 +197,14 @@
 }
 
 .grade-input {
-  width: 40px;
-  padding: 2px 4px;
+  width: 30px;
+  padding: 1px 2px;
   text-align: center;
   border: 1px solid #1a4a6e;
-  font-size: 11px;
+  font-size: 10px;
   font-family: inherit;
+  box-sizing: border-box;
+  margin: 0;
 }
 
 .character-section {
@@ -232,6 +235,7 @@
   padding: 3px 6px;
   text-align: center;
   font-size: 10px;
+  overflow: hidden;
 }
 
 .trait-header {
@@ -313,6 +317,7 @@
   padding: 4px;
   text-align: center;
   font-size: 10px;
+  overflow: hidden;
 }
 
 .att-label-header {

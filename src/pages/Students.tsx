@@ -26,7 +26,38 @@ export default function Students() {
     setSelectedStudent(student)
     setEditingCell(null)
     const data = await window.api.getStudentGrades({ studentId: student.id, gradeId: `grade_${gradeYear}` })
-    setStudentData(data)
+    
+    const defaultTraits = [
+      { trait: 'Care for environment', quarter1: 0, quarter2: 0, quarter3: 0, quarter4: 0 },
+      { trait: 'Consideration for others', quarter1: 0, quarter2: 0, quarter3: 0, quarter4: 0 },
+      { trait: 'Creativity', quarter1: 0, quarter2: 0, quarter3: 0, quarter4: 0 },
+      { trait: 'Helpfulness and cooperation', quarter1: 0, quarter2: 0, quarter3: 0, quarter4: 0 },
+      { trait: 'Honesty and integrity', quarter1: 0, quarter2: 0, quarter3: 0, quarter4: 0 },
+      { trait: 'Physical well-being', quarter1: 0, quarter2: 0, quarter3: 0, quarter4: 0 },
+      { trait: 'Respect for authority and others', quarter1: 0, quarter2: 0, quarter3: 0, quarter4: 0 },
+      { trait: 'Self-discipline & Sense of responsibility', quarter1: 0, quarter2: 0, quarter3: 0, quarter4: 0 },
+      { trait: 'Punctuality', quarter1: 0, quarter2: 0, quarter3: 0, quarter4: 0 },
+      { trait: 'Wise use of things', quarter1: 0, quarter2: 0, quarter3: 0, quarter4: 0 },
+    ]
+    
+    const defaultAttendance = [
+      { month: 'Jun', daysOfSchool: 0, daysPresent: 0, daysTardy: 0 },
+      { month: 'Jul', daysOfSchool: 0, daysPresent: 0, daysTardy: 0 },
+      { month: 'Aug', daysOfSchool: 0, daysPresent: 0, daysTardy: 0 },
+      { month: 'Sept', daysOfSchool: 0, daysPresent: 0, daysTardy: 0 },
+      { month: 'Oct', daysOfSchool: 0, daysPresent: 0, daysTardy: 0 },
+      { month: 'Nov', daysOfSchool: 0, daysPresent: 0, daysTardy: 0 },
+      { month: 'Dec', daysOfSchool: 0, daysPresent: 0, daysTardy: 0 },
+      { month: 'Jan', daysOfSchool: 0, daysPresent: 0, daysTardy: 0 },
+      { month: 'Feb', daysOfSchool: 0, daysPresent: 0, daysTardy: 0 },
+      { month: 'Mar', daysOfSchool: 0, daysPresent: 0, daysTardy: 0 },
+    ]
+    
+    setStudentData({
+      ...data,
+      traits: data.traits && data.traits.length > 0 ? data.traits : defaultTraits,
+      attendance: data.attendance && data.attendance.length > 0 ? data.attendance : defaultAttendance,
+    })
   }
 
   const handleGradeChange = (subjectIndex: number, quarter: string, value: string) => {
