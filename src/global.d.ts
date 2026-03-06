@@ -8,6 +8,10 @@ declare global {
     id: number
     last_name: string
     first_name: string
+    LRN?: string
+    adviser?: string
+    section?: string
+    sy?: string
   }
 
   interface Grade {
@@ -18,18 +22,32 @@ declare global {
     quarter4: number | null
   }
 
-  interface UpdateGradeArgs {
-    studentId: number
-    subject: string
-    quarter: 1 | 2 | 3 | 4
-    grade: number | null
+  interface Trait {
+    trait: string
+    quarter1: number
+    quarter2: number
+    quarter3: number
+    quarter4: number
+  }
+
+  interface Attendance {
+    month: string
+    daysOfSchool: number
+    daysPresent: number
+    daysTardy: number
   }
 
   interface StudentGradesData {
     student_id: number
     first_name: string
     last_name: string
+    LRN?: string
+    adviser?: string
+    section?: string
+    sy?: string
     grades: Grade[]
+    traits?: Trait[]
+    attendance?: Attendance[]
   }
 
   interface Window {
@@ -46,7 +64,7 @@ declare global {
       getStudentGrades: (args: {
         studentId: number
         gradeId: string
-      }) => Promise<Grade[]>
+      }) => Promise<StudentGradesData>
 
       updateAllStudentGrades: (args: {
         studentId: number

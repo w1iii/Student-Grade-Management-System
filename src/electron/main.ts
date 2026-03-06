@@ -10,19 +10,50 @@ interface Grade {
   quarter4: number
 }
 
-interface StudentGradesData {
+interface Trait {
+  trait: string
+  quarter1: number
+  quarter2: number
+  quarter3: number
+  quarter4: number
+}
+
+interface Attendance {
+  month: string
+  daysOfSchool: number
+  daysPresent: number
+  daysTardy: number
+}
+
+interface StudentData {
   student_id: number
+  LRN: string
   first_name: string
   last_name: string
+  adviser: string
+  section: string
+  sy: string
   grades: Grade[]
+  traits: Trait[]
+  attendance: Attendance[]
 }
 
 function getCSVPath(gradeLevel: string): string {
   return path.join(__dirname, '..', 'students', `grade_${gradeLevel.replace('grade_', '')}.csv`)
 }
 
-async function loadStudentsFromGrade(gradeLevel: string): Promise<StudentGradesData[]> {
+function getTraitsCSVPath(gradeLevel: string): string {
+  return path.join(__dirname, '..', 'students', `grade_${gradeLevel.replace('grade_', '')}_traits.csv`)
+}
+
+function getAttendanceCSVPath(gradeLevel: string): string {
+  return path.join(__dirname, '..', 'students', `grade_${gradeLevel.replace('grade_', '')}_attendance.csv`)
+}
+
+async function loadStudentsFromGrade(gradeLevel: string): Promise<StudentData[]> {
   const csvPath = getCSVPath(gradeLevel)
+  const traitsPath = getTraitsCSVPath(gradeLevel)
+  const attendancePath = getAttendanceCSVPath(gradeLevel)
   
   if (!await fs.pathExists(csvPath)) {
     return []
@@ -32,31 +63,79 @@ async function loadStudentsFromGrade(gradeLevel: string): Promise<StudentGradesD
   const lines = content.trim().split('\n')
   if (lines.length < 2) return []
 
-  const studentsMap: Record<number, StudentGradesData> = {}
+  const studentsMap: Record<number, StudentData> = {}
 
   for (let i = 1; i < lines.length; i++) {
     const line = lines[i].trim()
     if (!line) continue
 
-    const [studentId, firstName, lastName, subject, q1, q2, q3, q4] = line.split(',')
+    const parts = line.split(',')
+    const [studentId, LRN, firstName, lastName, adviser, section, sy, subject, q1, q2, q3, q4] = parts
     const id = parseInt(studentId)
 
     if (!studentsMap[id]) {
       studentsMap[id] = {
         student_id: id,
+        LRN: LRN || '',
         first_name: firstName,
         last_name: lastName,
-        grades: []
+        adviser: adviser || '',
+        section: section || '',
+        sy: sy || '',
+        grades: [],
+        traits: [],
+        attendance: []
       }
     }
 
-    studentsMap[id].grades.push({
-      subject: subject,
-      quarter1: parseInt(q1) || 0,
-      quarter2: parseInt(q2) || 0,
-      quarter3: parseInt(q3) || 0,
-      quarter4: parseInt(q4) || 0
-    })
+    if (subject) {
+      studentsMap[id].grades.push({
+        subject: subject,
+        quarter1: parseInt(q1) || 0,
+        quarter2: parseInt(q2) || 0,
+        quarter3: parseInt(q3) || 0,
+        quarter4: parseInt(q4) || 0
+      })
+    }
+  }
+
+  if (await fs.pathExists(traitsPath)) {
+    const traitsContent = await fs.readFile(traitsPath, 'utf-8')
+    const traitsLines = traitsContent.trim().split('\n')
+    for (let i = 1; i < traitsLines.length; i++) {
+      const line = traitsLines[i].trim()
+      if (!line) continue
+      const [studentId, trait, q1, q2, q3, q4] = line.split(',')
+      const id = parseInt(studentId)
+      if (studentsMap[id]) {
+        studentsMap[id].traits.push({
+          trait: trait,
+          quarter1: parseInt(q1) || 0,
+          quarter2: parseInt(q2) || 0,
+          quarter3: parseInt(q3) || 0,
+          quarter4: parseInt(q4) || 0
+        })
+      }
+    }
+  }
+
+  if (await fs.pathExists(attendancePath)) {
+    const attendanceContent = await fs.readFile(attendancePath, 'utf-8')
+    const attendanceLines = attendanceContent.trim().split('\n')
+    for (let i = 1; i < attendanceLines.length; i++) {
+      const line = attendanceLines[i].trim()
+      if (!line) continue
+      const [studentId, month, daysOfSchool, daysPresent, daysTardy] = line.split(',')
+      const id = parseInt(studentId)
+      if (studentsMap[id]) {
+        studentsMap[id].attendance.push({
+          month: month,
+          daysOfSchool: parseInt(daysOfSchool) || 0,
+          daysPresent: parseInt(daysPresent) || 0,
+          daysTardy: parseInt(daysTardy) || 0
+        })
+      }
+    }
   }
 
   const students = Object.values(studentsMap)
@@ -70,14 +149,14 @@ async function loadStudentsFromGrade(gradeLevel: string): Promise<StudentGradesD
   return students
 }
 
-async function saveStudentsToGrade(gradeLevel: string, students: StudentGradesData[]): Promise<void> {
+async function saveStudentsToGrade(gradeLevel: string, students: StudentData[]): Promise<void> {
   const csvPath = getCSVPath(gradeLevel)
   
-  let csvContent = 'student_id,first_name,last_name,subject,quarter1,quarter2,quarter3,quarter4\n'
+  let csvContent = 'student_id,LRN,first_name,last_name,adviser,section,sy,subject,q1,q2,q3,q4\n'
 
   for (const student of students) {
     for (const grade of student.grades) {
-      csvContent += `${student.student_id},${student.first_name},${student.last_name},${grade.subject},${grade.quarter1},${grade.quarter2},${grade.quarter3},${grade.quarter4}\n`
+      csvContent += `${student.student_id},${student.LRN},${student.first_name},${student.last_name},${student.adviser},${student.section},${student.sy},${grade.subject},${grade.quarter1},${grade.quarter2},${grade.quarter3},${grade.quarter4}\n`
     }
   }
 
@@ -111,8 +190,12 @@ ipcMain.handle('getStudents', async (_, { gradeId }) => {
   const students = await loadStudentsFromGrade(gradeLevel)
   return students.map(student => ({
     id: student.student_id,
+    LRN: student.LRN,
     first_name: student.first_name,
-    last_name: student.last_name
+    last_name: student.last_name,
+    adviser: student.adviser,
+    section: student.section,
+    sy: student.sy
   }))
 })
 
@@ -121,9 +204,19 @@ ipcMain.handle('getStudentGrades', async (_, { studentId, gradeId }) => {
   const students = await loadStudentsFromGrade(gradeLevel)
   const student = students.find(s => s.student_id === studentId)
   if (student) {
-    return student.grades
+    return {
+      grades: student.grades,
+      traits: student.traits,
+      attendance: student.attendance,
+      LRN: student.LRN,
+      adviser: student.adviser,
+      section: student.section,
+      sy: student.sy,
+      first_name: student.first_name,
+      last_name: student.last_name
+    }
   }
-  return []
+  return null
 })
 
 ipcMain.handle(
@@ -151,8 +244,6 @@ ipcMain.handle(
     if (!student || !student.grades[subjectIndex]) {
       return false
     }
-
-    const subject = student.grades[subjectIndex].subject
     
     const quarterMap: Record<string, 'quarter1' | 'quarter2' | 'quarter3' | 'quarter4'> = {
       quarter1: 'quarter1',

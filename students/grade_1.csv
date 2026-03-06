@@ -1,31 +1,41 @@
-student_id,first_name,last_name,subject, 1st, 2nd, 3rd, 4th
-1,Lucas,Adams,Math,99,84,74,87
-1,Lucas,Adams,English,82,80,85,83
-1,Lucas,Adams,Science,90,88,92,89
-1,Lucas,Adams,History,85,82,88,86
-1,Lucas,Adams,PE,92,90,94,91
-1,Lucas,Adams,Art,87,85,89,88
-2,Mia,Anderson,Math,95,92,94,93
-2,Mia,Anderson,English,88,85,90,87
-2,Mia,Anderson,Science,92,90,95,93
-2,Mia,Anderson,History,90,87,92,89
-2,Mia,Anderson,PE,88,85,90,87
-2,Mia,Anderson,Art,94,91,93,92
-3,Noah,Baker,Math,78,82,80,79
-3,Noah,Baker,English,85,88,86,84
-3,Noah,Baker,Science,82,85,83,81
-3,Noah,Baker,History,80,83,81,80
-3,Noah,Baker,PE,90,92,91,89
-3,Noah,Baker,Art,86,89,87,85
-4,Emma,Clark,Math,92,90,94,92
-4,Emma,Clark,English,89,86,91,88
-4,Emma,Clark,Science,95,93,97,95
-4,Emma,Clark,History,91,89,93,91
-4,Emma,Clark,PE,87,85,89,86
-4,Emma,Clark,Art,93,90,95,93
-5,Oliver,Davis,Math,85,88,86,84
-5,Oliver,Davis,English,80,83,81,79
-5,Oliver,Davis,Science,88,90,87,86
-5,Oliver,Davis,History,82,85,83,81
-5,Oliver,Davis,PE,94,92,95,93
-5,Oliver,Davis,Art,89,87,91,89
+student_id,LRN,first_name,last_name,adviser,section,sy,subject,q1,q2,q3,q4
+1,123456789012,Lucas,Adams,Mrs. Johnson,1-A,2024-2025,Math,50,84,0,87
+1,123456789012,Lucas,Adams,Mrs. Johnson,1-A,2024-2025,English,82,80,85,83
+1,123456789012,Lucas,Adams,Mrs. Johnson,1-A,2024-2025,Science,90,88,92,89
+1,123456789012,Lucas,Adams,Mrs. Johnson,1-A,2024-2025,History,85,82,88,86
+1,123456789012,Lucas,Adams,Mrs. Johnson,1-A,2024-2025,PE,92,90,94,91
+1,123456789012,Lucas,Adams,Mrs. Johnson,1-A,2024-2025,Art,87,85,89,88
+1,123456789012,Lucas,Adams,Mrs. Johnson,1-A,2024-2025,Filipino,88,86,90,87
+1,123456789012,Lucas,Adams,Mrs. Johnson,1-A,2024-2025,Araling Panlipunan,84,82,86,84
+2,123456789013,Mia,Anderson,Mrs. Johnson,1-A,2024-2025,Math,95,92,94,93
+2,123456789013,Mia,Anderson,Mrs. Johnson,1-A,2024-2025,English,88,85,90,87
+2,123456789013,Mia,Anderson,Mrs. Johnson,1-A,2024-2025,Science,92,90,95,93
+2,123456789013,Mia,Anderson,Mrs. Johnson,1-A,2024-2025,History,90,87,92,89
+2,123456789013,Mia,Anderson,Mrs. Johnson,1-A,2024-2025,PE,88,85,90,87
+2,123456789013,Mia,Anderson,Mrs. Johnson,1-A,2024-2025,Art,94,91,93,92
+2,123456789013,Mia,Anderson,Mrs. Johnson,1-A,2024-2025,Filipino,90,88,92,89
+2,123456789013,Mia,Anderson,Mrs. Johnson,1-A,2024-2025,Araling Panlipunan,87,85,89,86
+3,123456789014,Noah,Baker,Mrs. Johnson,1-A,2024-2025,Math,78,82,80,79
+3,123456789014,Noah,Baker,Mrs. Johnson,1-A,2024-2025,English,85,88,86,84
+3,123456789014,Noah,Baker,Mrs. Johnson,1-A,2024-2025,Science,82,85,83,81
+3,123456789014,Noah,Baker,Mrs. Johnson,1-A,2024-2025,History,80,83,81,80
+3,123456789014,Noah,Baker,Mrs. Johnson,1-A,2024-2025,PE,90,92,91,89
+3,123456789014,Noah,Baker,Mrs. Johnson,1-A,2024-2025,Art,86,89,87,85
+3,123456789014,Noah,Baker,Mrs. Johnson,1-A,2024-2025,Filipino,83,86,84,82
+3,123456789014,Noah,Baker,Mrs. Johnson,1-A,2024-2025,Araling Panlipunan,81,84,82,80
+4,123456789015,Emma,Clark,Mrs. Johnson,1-A,2024-2025,Math,92,90,94,92
+4,123456789015,Emma,Clark,Mrs. Johnson,1-A,2024-2025,English,89,86,91,88
+4,123456789015,Emma,Clark,Mrs. Johnson,1-A,2024-2025,Science,95,93,97,95
+4,123456789015,Emma,Clark,Mrs. Johnson,1-A,2024-2025,History,91,89,93,91
+4,123456789015,Emma,Clark,Mrs. Johnson,1-A,2024-2025,PE,87,85,89,86
+4,123456789015,Emma,Clark,Mrs. Johnson,1-A,2024-2025,Art,93,90,95,93
+4,123456789015,Emma,Clark,Mrs. Johnson,1-A,2024-2025,Filipino,90,88,92,89
+4,123456789015,Emma,Clark,Mrs. Johnson,1-A,2024-2025,Araling Panlipunan,88,86,90,87
+5,123456789016,Oliver,Davis,Mrs. Johnson,1-A,2024-2025,Math,85,88,86,84
+5,123456789016,Oliver,Davis,Mrs. Johnson,1-A,2024-2025,English,80,83,81,79
+5,123456789016,Oliver,Davis,Mrs. Johnson,1-A,2024-2025,Science,88,90,87,86
+5,123456789016,Oliver,Davis,Mrs. Johnson,1-A,2024-2025,History,82,85,83,81
+5,123456789016,Oliver,Davis,Mrs. Johnson,1-A,2024-2025,PE,94,92,95,93
+5,123456789016,Oliver,Davis,Mrs. Johnson,1-A,2024-2025,Art,89,87,91,89
+5,123456789016,Oliver,Davis,Mrs. Johnson,1-A,2024-2025,Filipino,84,86,84,83
+5,123456789016,Oliver,Davis,Mrs. Johnson,1-A,2024-2025,Araling Panlipunan,82,85,83,81

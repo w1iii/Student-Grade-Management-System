@@ -36,12 +36,7 @@ export default function Dashboard() {
 
   const handleGradeClick = (gradeId: string) => {
     setSelectedGrade(gradeId)
-
-    // extract number from "grade_10" → 10
-    const gradeNumber = gradeId.split('_')[1]
-
-    // navigate(`/students/${gradeNumber}`)
-    navigate('/report')
+    navigate(`/students/${gradeId.replace('grade_', '')}`)
   }
 
   const renderSection = (title: string, gradeList: Grade[]) => (

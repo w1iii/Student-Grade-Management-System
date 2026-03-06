@@ -2,7 +2,7 @@
 /* ===== Layout ===== */
 .students-container {
   display: flex;
-  height: 100vh;
+  height: 120vh;
   overflow: hidden;
   background-image: url('/bg.jpg');
   background-repeat: no-repeat;
