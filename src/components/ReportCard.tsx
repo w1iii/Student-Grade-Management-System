@@ -124,8 +124,23 @@ export default function ReportCard({
   editingCell,
   onCellClick
 }: ReportCardProps) {
-  const displayTraits = (traits && traits.length > 0) ? traits : defaultTraits
-  const displayAttendance = (attendance && attendance.length > 0) ? attendance : defaultAttendance
+  const displayTraits = (() => {
+    if (!traits || traits.length === 0) return defaultTraits
+    const filled = [...traits]
+    while (filled.length < defaultTraits.length) {
+      filled.push(defaultTraits[filled.length])
+    }
+    return filled
+  })()
+  
+  const displayAttendance = (() => {
+    if (!attendance || attendance.length === 0) return defaultAttendance
+    const filled = [...attendance]
+    while (filled.length < defaultAttendance.length) {
+      filled.push(defaultAttendance[filled.length])
+    }
+    return filled
+  })()
 
   const totals = displayAttendance.reduce(
     (acc, att) => ({
