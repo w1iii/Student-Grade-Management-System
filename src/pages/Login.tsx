@@ -25,12 +25,12 @@ export default function Login(){
       <div className="login-container">
         <h1> Admin </h1>
         <div className="login-input">
-        <input id="username" type="text" placeholder="username" value={username} onChange={(e) => setUsername(e.target.value)}/>
-        <input id="password" type="text" placeholder="password" value={password} onChange={(e) => setPassword(e.target.value)}/>
-        <button onClick={handleLogin}>
-          Submit
-        </button>
-        { invalidCredentials && <p className="error-login">Invalid Credentials </p>}
+          <input id="username" type="text" placeholder="username" value={username} onChange={(e) => setUsername(e.target.value)}/>
+          <input id="password" type="password" placeholder="password" value={password} onChange={(e) => setPassword(e.target.value)}/>
+          <button onClick={handleLogin}>
+            Submit
+          </button>
+          { invalidCredentials && <p className="error-login">Invalid Credentials </p>}
         </div>
         </div>
       </div>
