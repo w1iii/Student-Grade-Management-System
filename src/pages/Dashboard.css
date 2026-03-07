@@ -5,8 +5,8 @@
   background-repeat: no-repeat;
   background-size:cover;
   background-position: center;justify-content:center;
-  margin-top:5rem;
   padding:0;
+  height:100vh;
 }
  .dashboard-container {
   display: flex;
