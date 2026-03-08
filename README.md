@@ -2,6 +2,10 @@
 
 A desktop application for managing and tracking student grades across multiple grade levels. Built with Electron, React, and TypeScript.
 
+<img width="1205" height="789" alt="Screenshot 2026-03-08 at 11 10 15 PM" src="https://github.com/user-attachments/assets/7755f6eb-e107-4bc9-8635-efcfce1b0cb5" />
+<img width="1203" height="795" alt="Screenshot 2026-03-08 at 11 10 34 PM" src="https://github.com/user-attachments/assets/f4c933a1-0ad8-4f9c-b0fa-8172dc79d2ec" />
+
+
 ## Features
 
 - **Multi-grade Support**: Manage grades from Elementary (Grade 1-6), High School (Grade 7-10), and Senior High School (Grade 11-12)
