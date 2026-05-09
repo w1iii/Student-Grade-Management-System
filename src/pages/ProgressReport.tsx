@@ -52,11 +52,13 @@ export default function ProgressReport() {
       <div className="report-container">
         {/* Header */}
         <div className="report-header">
-          <div className="school-logo">
-            <div className="logo-circle">
-              <span className="logo-text">BTCS</span>
-            </div>
-          </div>
+          {
+            // <div className="school-logo">
+            //   <div className="logo-circle">
+            //     <span className="logo-text">BTCS</span>
+            //   </div>
+            // </div>
+          }
           <div className="school-info">
             <h1 className="school-name">BACOLOD TRINITY CHRISTIAN SCHOOL, INC. 
             <span className="deped-form">DepEd Form 138</span>

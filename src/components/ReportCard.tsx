@@ -178,11 +178,13 @@ export default function ReportCard({
     <div className="report-page">
       <div className="report-container">
         <div className="report-header">
-          <div className="school-logo">
-            <div className="logo-circle">
-              <span className="logo-text">{schoolConfig.schoolAcronym}</span>
-            </div>
-          </div>
+          {
+          // <div className="school-logo">
+          //   <div className="logo-circle">
+          //     <span className="logo-text">{schoolConfig.schoolAcronym}</span>
+          //   </div>
+          // </div>
+           }
           <div className="school-info">
             <h1 className="school-name">{schoolConfig.schoolName}
               <span className="deped-form">{schoolConfig.depEdForm}</span>

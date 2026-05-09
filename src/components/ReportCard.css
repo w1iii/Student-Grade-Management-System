@@ -44,19 +44,18 @@
 
 .school-info {
   text-align: center;
-  padding-left: 80px;
 }
 
 .school-name {
   font-size: 18px;
-  margin: 0;
+  margin-left: 11.4rem;
   color: #1a4a6e;
 }
 
 .deped-form {
   font-size: 11px;
   font-weight: normal;
-  margin-left: 15px;
+  margin-left: 6rem;
   color: #666;
 }
 
