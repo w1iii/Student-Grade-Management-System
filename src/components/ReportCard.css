@@ -12,14 +12,18 @@
 }
 
 .report-header {
+  position: relative;
   display: flex;
+  justify-content: center;
   align-items: center;
-  gap: 20px;
   margin-bottom: 10px;
 }
 
 .school-logo {
-  flex-shrink: 0;
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
 }
 
 .logo-circle {
@@ -39,8 +43,8 @@
 }
 
 .school-info {
-  flex: 1;
   text-align: center;
+  padding-left: 80px;
 }
 
 .school-name {
