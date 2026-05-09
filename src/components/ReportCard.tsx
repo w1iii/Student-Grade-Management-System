@@ -35,6 +35,7 @@ interface StudentInfo {
 
 interface ReportCardProps {
   studentInfo: StudentInfo
+  schoolConfig: SchoolConfig
   grades: Grade[]
   traits?: Trait[]
   attendance?: Attendance[]
@@ -112,6 +113,7 @@ function getGeneralAverage(grades: Grade[]): number {
 
 export default function ReportCard({
   studentInfo,
+  schoolConfig,
   grades,
   traits,
   attendance,
@@ -178,16 +180,16 @@ export default function ReportCard({
         <div className="report-header">
           <div className="school-logo">
             <div className="logo-circle">
-              <span className="logo-text">BTCS</span>
+              <span className="logo-text">{schoolConfig.schoolAcronym}</span>
             </div>
           </div>
           <div className="school-info">
-            <h1 className="school-name">BACOLOD TRINITY CHRISTIAN SCHOOL, INC.
-              <span className="deped-form">DepEd Form 138</span>
+            <h1 className="school-name">{schoolConfig.schoolName}
+              <span className="deped-form">{schoolConfig.depEdForm}</span>
             </h1>
-            <p className="school-address">Villa Angela Subdivision, Phase 3, Bacolod City</p>
-            <p className="school-address">DepEd Recognition No. S-04 s. 1986</p>
-            <p className="school-address accredited">ACCREDITED BY ACSCU-ACI, CERTIFIED BY FAAP</p>
+            <p className="school-address">{schoolConfig.schoolAddress}</p>
+            <p className="school-address">{schoolConfig.depEdRecognition}</p>
+            <p className="school-address accredited">{schoolConfig.accreditation}</p>
           </div>
         </div>
 
@@ -366,7 +368,7 @@ export default function ReportCard({
         </div>
 
         <div className="principal-section">
-          <p className="principal-name">Ms. ESTHER JANE Y. UY</p>
+          <p className="principal-name">{schoolConfig.principalName}</p>
           <p className="principal-title">Principal</p>
         </div>
 
