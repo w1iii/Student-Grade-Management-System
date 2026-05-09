@@ -40,3 +40,60 @@
   transition:0.3s;
 }
 
+/* ── User Menu ── */
+.user-menu {
+  position: relative;
+}
+
+.user-icon-btn {
+  background: none;
+  border: 2px solid white;
+  border-radius: 50%;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: white;
+  padding: 0;
+  transition: 0.2s;
+}
+
+.user-icon-btn:hover {
+  background: rgba(255, 255, 255, 0.15);
+}
+
+.dropdown-menu {
+  position: absolute;
+  right: 0;
+  top: calc(100% + 8px);
+  background: white;
+  border-radius: 6px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  min-width: 140px;
+  overflow: hidden;
+  z-index: 100;
+}
+
+.dropdown-menu button {
+  display: block;
+  width: 100%;
+  padding: 10px 16px;
+  border: none;
+  background: none;
+  text-align: left;
+  cursor: pointer;
+  font-size: 14px;
+  color: #333;
+  transition: 0.15s;
+}
+
+.dropdown-menu button:hover {
+  background: #f0f4f0;
+}
+
+.dropdown-logout {
+  color: #c0392b !important;
+}
+
