@@ -24,11 +24,11 @@
 .return:hover{
   scale:1.1;
   transition:0.3s;
-  color:green;
+  color:#008000;
 }
 
 .navbar-container p{
-  background-color:none;
+  background-color:transparent;
   border-style:none;
   cursor:pointer;
   transition:0.3s;
