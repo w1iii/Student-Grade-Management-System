@@ -6,6 +6,7 @@ import Login from './pages/Login.tsx'
 import Dashboard from './pages/Dashboard.tsx'
 import Students from './pages/Students.tsx'
 import ProgressReport from './pages/ProgressReport.tsx'
+import Settings from './pages/Settings.tsx'
 
 function App() {
   return (
@@ -16,6 +17,7 @@ function App() {
           <Route path="/dashboard" element={<ProtectedRoute><Dashboard/></ProtectedRoute>}/>
           <Route path="/report" element={<ProtectedRoute><ProgressReport /></ProtectedRoute>}/>
           <Route path="/students/:gradeYear" element={<ProtectedRoute><Students/></ProtectedRoute>}/>
+          <Route path="/settings" element={<ProtectedRoute><Settings /></ProtectedRoute>}/>
         </Routes>
       </AuthProvider>
     </HashRouter>

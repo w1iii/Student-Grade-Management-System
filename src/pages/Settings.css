@@ -1,0 +1,114 @@
+.settings-page {
+  min-height: calc(100vh - 5.2rem);
+  background-image: url('/bg.jpg');
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 2rem;
+}
+
+.settings-container {
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.15);
+  width: 100%;
+  max-width: 600px;
+  padding: 2rem;
+}
+
+.settings-title {
+  font-size: 1.5rem;
+  color: #063510;
+  margin: 0 0 1.5rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 2px solid #063510;
+}
+
+.settings-section {
+  margin-bottom: 2rem;
+  padding-bottom: 2rem;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.settings-section:last-child {
+  border-bottom: none;
+  margin-bottom: 0;
+  padding-bottom: 0;
+}
+
+.settings-section h2 {
+  font-size: 1.1rem;
+  color: #333;
+  margin: 0 0 1rem;
+}
+
+.settings-field {
+  margin-bottom: 0.75rem;
+}
+
+.settings-field label {
+  display: block;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #555;
+  margin-bottom: 0.25rem;
+}
+
+.settings-field input {
+  width: 100%;
+  padding: 0.5rem 0.75rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 0.95rem;
+  box-sizing: border-box;
+  transition: border-color 0.2s;
+}
+
+.settings-field input:focus {
+  outline: none;
+  border-color: #063510;
+  box-shadow: 0 0 0 2px rgba(6, 53, 16, 0.15);
+}
+
+.settings-btn {
+  background: #063510;
+  color: white;
+  border: none;
+  padding: 0.6rem 1.25rem;
+  border-radius: 4px;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: background 0.2s;
+  margin-top: 0.25rem;
+}
+
+.settings-btn:hover {
+  background: #0a4d18;
+}
+
+.settings-export-buttons {
+  display: flex;
+  gap: 1rem;
+}
+
+.settings-error {
+  color: #c0392b;
+  font-size: 0.85rem;
+  margin: 0 0 0.75rem;
+}
+
+.settings-success {
+  color: #27ae60;
+  font-size: 0.85rem;
+  margin: 0 0 0.75rem;
+}
+
+.settings-loading {
+  text-align: center;
+  color: white;
+  font-size: 1.1rem;
+  padding: 3rem;
+}
