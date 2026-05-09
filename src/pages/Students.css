@@ -58,7 +58,39 @@
 /* ===== Main Content ===== */
 .grades-container {
   flex: 1;
-  overflow: hidden;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+}
+
+.grades-container .report-page {
+  max-height: none;
+  padding-top: 0;
+}
+
+.report-toolbar {
+  display: flex;
+  justify-content: flex-end;
+  padding: 0.5rem 1rem;
+  background: rgba(255, 255, 255, 0.9);
+}
+
+.print-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  background: #063510;
+  color: white;
+  border: none;
+  padding: 0.45rem 0.9rem;
+  border-radius: 4px;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.print-btn:hover {
+  background: #0a4d18;
 }
 
 .grades-header{
