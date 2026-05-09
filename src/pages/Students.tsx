@@ -1,5 +1,5 @@
 import { useParams } from 'react-router-dom'
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useMemo } from 'react'
 import Navbar from '../components/Navbar.tsx'
 import ReportCard from '../components/ReportCard.tsx'
 import './Students.css'
@@ -10,24 +10,44 @@ export default function Students() {
   const [selectedStudent, setSelectedStudent] = useState<Student | null>(null)
   const [studentData, setStudentData] = useState<StudentGradesData | null>(null)
   const [editingCell, setEditingCell] = useState<string | null>(null)
+  const [isLoadingStudents, setIsLoadingStudents] = useState(false)
+  const [isLoadingGrades, setIsLoadingGrades] = useState(false)
+  const [searchQuery, setSearchQuery] = useState('')
 
   useEffect(() => {
     if (!gradeYear) return
     const fetchStudents = async () => {
-      const res = await window.api.getStudents({
-        gradeId: `grade_${gradeYear}`,
-      })
-      setStudents(res)
+      setIsLoadingStudents(true)
+      try {
+        const res = await window.api.getStudents({
+          gradeId: `grade_${gradeYear}`,
+        })
+        setStudents(res)
+      } catch (error) {
+        console.error('Failed to load students:', error)
+      } finally {
+        setIsLoadingStudents(false)
+      }
     }
     fetchStudents()
   }, [gradeYear])
 
+  const filteredStudents = useMemo(() => {
+    if (!searchQuery.trim()) return students
+    const q = searchQuery.toLowerCase()
+    return students.filter(
+      s => s.last_name.toLowerCase().includes(q) || s.first_name.toLowerCase().includes(q)
+    )
+  }, [students, searchQuery])
+
   const handleStudentClick = async (student: Student) => {
     setSelectedStudent(student)
     setEditingCell(null)
-    const data = await window.api.getStudentGrades({ studentId: student.id, gradeId: `grade_${gradeYear}` })
-    
-    const defaultTraits = [
+    setIsLoadingGrades(true)
+    try {
+      const data = await window.api.getStudentGrades({ studentId: student.id, gradeId: `grade_${gradeYear}` })
+      
+      const defaultTraits = [
       { trait: 'Care for environment', quarter1: 0, quarter2: 0, quarter3: 0, quarter4: 0 },
       { trait: 'Consideration for others', quarter1: 0, quarter2: 0, quarter3: 0, quarter4: 0 },
       { trait: 'Creativity', quarter1: 0, quarter2: 0, quarter3: 0, quarter4: 0 },
@@ -58,6 +78,11 @@ export default function Students() {
       traits: data.traits && data.traits.length > 0 ? data.traits : defaultTraits,
       attendance: data.attendance && data.attendance.length > 0 ? data.attendance : defaultAttendance,
     })
+    } catch (error) {
+      console.error('Failed to load grades:', error)
+    } finally {
+      setIsLoadingGrades(false)
+    }
   }
 
   const handleGradeChange = (subjectIndex: number, quarter: string, value: string) => {
@@ -212,26 +237,46 @@ export default function Students() {
       <div className="students-container">
         <div className="students-sidebar">
           <div className="searchbar-container">
-            <input className="searchbar" type="text" />
-            <button>search</button>
+            <input
+              className="searchbar"
+              type="text"
+              placeholder="Search students..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+            />
+            <button onClick={() => setSearchQuery('')}>
+              {searchQuery ? 'clear' : 'search'}
+            </button>
           </div>
           <div className="students-content">
-            <div className="student-list">
-              {students.map((student) => (
-                <div
-                  key={student.id}
-                  onClick={() => handleStudentClick(student)}
-                  className={`student-item ${selectedStudent?.id === student.id ? 'active' : ''}`}
-                >
-                  {student.last_name}, {student.first_name}
-                </div>
-              ))}
-            </div>
+            {isLoadingStudents ? (
+              <p className="loading-text">Loading students...</p>
+            ) : filteredStudents.length === 0 ? (
+              <p className="loading-text">
+                {searchQuery ? 'No students match your search' : 'No students found'}
+              </p>
+            ) : (
+              <div className="student-list">
+                {filteredStudents.map((student) => (
+                  <div
+                    key={student.id}
+                    onClick={() => handleStudentClick(student)}
+                    className={`student-item ${selectedStudent?.id === student.id ? 'active' : ''}`}
+                  >
+                    {student.last_name}, {student.first_name}
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
         </div>
 
         <div className="grades-container">
-          {selectedStudent && studentData ? (
+          {isLoadingGrades ? (
+            <div className="empty-state">
+              <p>Loading grades...</p>
+            </div>
+          ) : selectedStudent && studentData ? (
             <ReportCard
               studentInfo={{
                 LRN: studentData.LRN || '',
