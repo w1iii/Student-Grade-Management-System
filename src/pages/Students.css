@@ -193,3 +193,39 @@
   }
 }
 
+/* ===== Print Styles ===== */
+@media print {
+  body {
+    background: white !important;
+  }
+
+  .navbar-container,
+  .students-sidebar,
+  .report-toolbar,
+  .print-btn {
+    display: none !important;
+  }
+
+  .students-container {
+    display: block !important;
+    height: auto !important;
+    background: none !important;
+  }
+
+  .grades-container {
+    overflow: visible !important;
+    display: block !important;
+  }
+
+  .grades-container .report-page {
+    max-height: none !important;
+    padding: 0 !important;
+  }
+
+  .report-container {
+    box-shadow: none !important;
+    border: none !important;
+    max-width: 100% !important;
+  }
+}
+
