@@ -1,21 +1,18 @@
 import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useAuth } from '../context/AuthContext'
 import './Login.css'
 
 export default function Login(){
-  const navigate = useNavigate()
+  const { login } = useAuth()
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [invalidCredentials, setInvalidCredentials] = useState(false)
 
   const handleLogin = async () => {
-    const result = await window.api.login({ username: username, password: password })
-    if(result){
-      navigate('/dashboard')
-    }else{
+    const success = await login(username, password)
+    if (!success) {
       setInvalidCredentials(true)
     }
-    console.log(result) // "Login successful" or "Invalid username/password"
   }
 
 
