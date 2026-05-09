@@ -68,11 +68,16 @@
   padding-top: 0;
 }
 
+.empty-state{
+  display:flex;
+  justify-content: center;
+  color:white;
+}
+
 .report-toolbar {
   display: flex;
   justify-content: flex-end;
   padding: 0.5rem 1rem;
-  background: rgba(255, 255, 255, 0.9);
 }
 
 .print-btn {
