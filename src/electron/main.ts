@@ -25,6 +25,17 @@ interface Attendance {
   daysTardy: number
 }
 
+interface SchoolConfig {
+  password: string
+  schoolName: string
+  schoolAcronym: string
+  schoolAddress: string
+  depEdRecognition: string
+  accreditation: string
+  principalName: string
+  depEdForm: string
+}
+
 interface StudentData {
   student_id: number
   LRN: string
@@ -48,6 +59,34 @@ function getTraitsCSVPath(gradeLevel: string): string {
 
 function getAttendanceCSVPath(gradeLevel: string): string {
   return path.join(__dirname, '..', 'students', `grade_${gradeLevel.replace('grade_', '')}_attendance.csv`)
+}
+
+function getConfigPath(): string {
+  return path.join(__dirname, '..', 'students', 'school-config.json')
+}
+
+const DEFAULT_CONFIG: SchoolConfig = {
+  password: '1234',
+  schoolName: 'BACOLOD TRINITY CHRISTIAN SCHOOL, INC.',
+  schoolAcronym: 'BTCS',
+  schoolAddress: 'Villa Angela Subdivision, Phase 3, Bacolod City',
+  depEdRecognition: 'DepEd Recognition No. S-04 s. 1986',
+  accreditation: 'ACCREDITED BY ACSCU-ACI, CERTIFIED BY FAAP',
+  principalName: 'Ms. ESTHER JANE Y. UY',
+  depEdForm: 'DepEd Form 138',
+}
+
+async function loadConfig(): Promise<SchoolConfig> {
+  const configPath = getConfigPath()
+  if (!await fs.pathExists(configPath)) {
+    await saveConfig(DEFAULT_CONFIG)
+    return DEFAULT_CONFIG
+  }
+  return fs.readJson(configPath)
+}
+
+async function saveConfig(config: SchoolConfig): Promise<void> {
+  await fs.writeJson(getConfigPath(), config, { spaces: 2 })
 }
 
 async function loadStudentsFromGrade(gradeLevel: string): Promise<StudentData[]> {
@@ -243,11 +282,11 @@ app.whenReady().then(createWindow)
 
 ipcMain.handle('login', async (_, credentials: { username: string; password: string }) => {
   const { username, password } = credentials
-  if (username === 'admin' && password === '1234') {
-    return true 
-  } else {
-    return false
+  const config = await loadConfig()
+  if (username === 'admin' && password === config.password) {
+    return true
   }
+  return false
 })
 
 ipcMain.handle('getStudents', async (_, { gradeId }) => {
@@ -421,3 +460,55 @@ ipcMain.handle(
     return true
   }
 )
+
+ipcMain.handle('getSettings', async () => {
+  const config = await loadConfig()
+  const { password: _, ...settings } = config
+  return settings
+})
+
+ipcMain.handle('saveSettings', async (_, settings: Omit<SchoolConfig, 'password'>) => {
+  const config = await loadConfig()
+  config.schoolName = settings.schoolName
+  config.schoolAcronym = settings.schoolAcronym
+  config.schoolAddress = settings.schoolAddress
+  config.depEdRecognition = settings.depEdRecognition
+  config.accreditation = settings.accreditation
+  config.principalName = settings.principalName
+  config.depEdForm = settings.depEdForm
+  await saveConfig(config)
+  return true
+})
+
+ipcMain.handle('changePassword', async (_, { currentPassword, newPassword }: { currentPassword: string; newPassword: string }) => {
+  const config = await loadConfig()
+  if (currentPassword !== config.password) {
+    return { success: false, error: 'Current password is incorrect' }
+  }
+  config.password = newPassword
+  await saveConfig(config)
+  return { success: true }
+})
+
+const GRADE_LEVELS = Array.from({ length: 12 }, (_, i) => String(i + 1))
+
+ipcMain.handle('exportAllGrades', async () => {
+  let anyData = false
+  let csvContent = 'grade_level,student_id,first_name,last_name,subject,quarter1,quarter2,quarter3,quarter4\n'
+
+  for (const level of GRADE_LEVELS) {
+    const students = await loadStudentsFromGrade(level)
+    for (const student of students) {
+      for (const grade of student.grades) {
+        csvContent += `${level},${student.student_id},${student.first_name},${student.last_name},${grade.subject},${grade.quarter1},${grade.quarter2},${grade.quarter3},${grade.quarter4}\n`
+        anyData = true
+      }
+    }
+  }
+
+  if (!anyData) return false
+
+  const exportPath = path.join(__dirname, '..', 'students', 'exported_grades.csv')
+  await fs.writeFile(exportPath, csvContent, 'utf-8')
+  return true
+})

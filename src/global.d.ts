@@ -37,6 +37,21 @@ declare global {
     daysTardy: number
   }
 
+  interface SchoolConfig {
+    schoolName: string
+    schoolAcronym: string
+    schoolAddress: string
+    depEdRecognition: string
+    accreditation: string
+    principalName: string
+    depEdForm: string
+  }
+
+  interface ChangePasswordResult {
+    success: boolean
+    error?: string
+  }
+
   interface StudentGradesData {
     student_id: number
     first_name: string
@@ -95,6 +110,15 @@ declare global {
         value: number
         gradeId: string
       }) => Promise<boolean>
+
+      getSettings: () => Promise<SchoolConfig>
+      saveSettings: (settings: SchoolConfig) => Promise<boolean>
+      changePassword: (data: {
+        currentPassword: string
+        newPassword: string
+      }) => Promise<ChangePasswordResult>
+
+      exportAllGrades: () => Promise<boolean>
     }
   }
 }
