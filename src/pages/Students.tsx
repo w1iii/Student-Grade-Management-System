@@ -13,16 +13,19 @@ export default function Students() {
   const [isLoadingStudents, setIsLoadingStudents] = useState(false)
   const [isLoadingGrades, setIsLoadingGrades] = useState(false)
   const [searchQuery, setSearchQuery] = useState('')
+  const [schoolConfig, setSchoolConfig] = useState<SchoolConfig | null>(null)
 
   useEffect(() => {
     if (!gradeYear) return
     const fetchStudents = async () => {
       setIsLoadingStudents(true)
       try {
-        const res = await window.api.getStudents({
-          gradeId: `grade_${gradeYear}`,
-        })
-        setStudents(res)
+        const [studentsRes, settings] = await Promise.all([
+          window.api.getStudents({ gradeId: `grade_${gradeYear}` }),
+          window.api.getSettings(),
+        ])
+        setStudents(studentsRes)
+        setSchoolConfig(settings)
       } catch (error) {
         console.error('Failed to load students:', error)
       } finally {
@@ -287,6 +290,7 @@ export default function Students() {
                 sy: studentData.sy || '',
                 gradeLevel: getGradeLevelName(),
               }}
+              schoolConfig={schoolConfig!}
               grades={studentData.grades}
               traits={studentData.traits}
               attendance={studentData.attendance}
