@@ -280,6 +280,7 @@ export default function Students() {
               <p>Loading grades...</p>
             </div>
           ) : selectedStudent && studentData ? (
+            <>
             <div className="report-toolbar">
               <button className="print-btn" onClick={() => window.print()} title="Print or save as PDF">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -312,6 +313,7 @@ export default function Students() {
               editingCell={editingCell}
               onCellClick={handleCellClick}
             />
+            </>
           ) : (
             <div className="empty-state">
               <p>Select a student to view grades</p>
